@@ -59,12 +59,10 @@ async function home(request: Request) {
       'X-CMC_PRO_API_KEY': Deno.env.get("API_TOKEN")!
     },
   })
-  console.log(req)
   const coins = (await req.json()).data
-  console.log(coins)
   const coinsKeys = Object.keys(coins)
 
-  const text = coinsKeys.map(c => `${coins[c].name} (${c}) : ${Math.round(coins[c].quote.EUR.price * 100) / 100} €`).join('\n')
+  const text = coinsKeys.map(c => `${coins[c].name} (${c}) : ${Math.round(coins[c].quote.EUR.price * 100) / 100} € (${Math.round(coins[c].quote.EUR.percent_change_24h * 100) / 100}% en 24h)`).join('\n')
 
   // const text = 'test'
   if (type === 2) {
