@@ -53,7 +53,20 @@ async function home(request: Request) {
   // Type 2 in a request is an ApplicationCommand interaction.
   // It implies that a user has issued a command.
   // const text = await getCoins()
-  const text = 'test'
+  const req = await fetch(`https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=BTC,ETH,ADA&convert=EUR`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CMC_PRO_API_KEY': Deno.env.get("API_TOKEN")!
+    },
+  })
+  console.log(req)
+  const coins = (await req.json()).data
+  console.log(coins)
+  const coinsKeys = Object.keys(coins)
+
+  const text = coinsKeys.map(c => `${coins[c].name} (${c}) : ${Math.round(coins[c].quote.EUR.price * 100) / 100} €`).join('\n')
+
+  // const text = 'test'
   if (type === 2) {
     // const { value } = data.options.find((option) => option.name === "name");
     return json({
@@ -92,17 +105,4 @@ async function verifySignature(
 /** Converts a hexadecimal string to Uint8Array. */
 function hexToUint8Array(hex: string) {
   return new Uint8Array(hex.match(/.{1,2}/g)!.map((val) => parseInt(val, 16)));
-}
-
-async function getCoins() {
-  const req = await fetch(`https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=BTC,ETH,ADA&convert=EUR`, {
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CMC_PRO_API_KEY': Deno.env.get("API_TOKEN")!
-    },
-  })
-  const coins = (await req.json()).data
-  const coinsKeys = Object.keys(coins)
-
-  return coinsKeys.map(c => `${coins[c].name} (${c}) : ${Math.round(coins[c].quote.EUR.price * 100) / 100} €`).join('\n')
 }
