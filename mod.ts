@@ -62,7 +62,7 @@ async function home(request: Request) {
   const coins = (await req.json()).data
   const coinsKeys = Object.keys(coins)
 
-  const text = coinsKeys.map(c => `${coins[c].name} (${c}) : ${coins[c].quote.EUR.percent_change_24h > 0 ? ':green_circle:' : ':red_circle:'} ${Math.round(coins[c].quote.EUR.price * 100) / 100}€ (${Math.round(coins[c].quote.EUR.percent_change_24h * 100) / 100}% en 24h) ${coins[c].quote.EUR.percent_change_24h > 0 ? ':green_circle:' : ':red_circle:'}`).join('\n')
+  const text = coinsKeys.map(c => `${coins[c].name} (${c}) : ${Math.round(coins[c].quote.EUR.price * 100) / 100}€ (${Math.round(coins[c].quote.EUR.percent_change_24h * 100) / 100}% en 24h) ${coins[c].quote.EUR.percent_change_24h > 0 ? ':green_circle:' : ':red_circle:'}`).join('\n')
 
   // const text = 'test'
   if (type === 2) {
