@@ -52,21 +52,18 @@ async function home(request: Request) {
 
   // Type 2 in a request is an ApplicationCommand interaction.
   // It implies that a user has issued a command.
-  // const text = await getCoins()
-  const req = await fetch(`https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=BTC,ETH,ADA&convert=EUR`, {
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CMC_PRO_API_KEY': Deno.env.get("API_TOKEN")!
-    },
-  })
-  const coins = (await req.json()).data
-  const coinsKeys = Object.keys(coins)
-
-  const text = coinsKeys.map(c => `${coins[c].name} (${c}) : ${Math.round(coins[c].quote.EUR.price * 100) / 100}€ (${Math.round(coins[c].quote.EUR.percent_change_24h * 100) / 100}% en 24h) ${coins[c].quote.EUR.percent_change_24h > 0 ? ':green_circle:' : ':red_circle:'}`).join('\n')
-
-  // const text = 'test'
   if (type === 2) {
-    // const { value } = data.options.find((option) => option.name === "name");
+    const req = await fetch(`https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=BTC,ETH,ADA&convert=EUR`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CMC_PRO_API_KEY': Deno.env.get("API_TOKEN")!
+      },
+    })
+    const coins = (await req.json()).data
+    const coinsKeys = Object.keys(coins)
+
+    const text = coinsKeys.map(c => `${coins[c].name} (${c}) : ${Math.round(coins[c].quote.EUR.price * 100) / 100}€ (${Math.round(coins[c].quote.EUR.percent_change_24h * 100) / 100}% en 24h) ${coins[c].quote.EUR.percent_change_24h > 0 ? ':green_circle:' : ':red_circle:'}`).join('\n')
+
     return json({
       // Type 4 responds with the below message retaining the user's
       // input at the top.
