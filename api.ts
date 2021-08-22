@@ -56,13 +56,11 @@ export class CoinApi {
       const usdQuote = coin.quote.USD;
       return `**${results[c].name} (${c}) :**
        *$${this.truncate(usdQuote.price)} / ${this.truncate(eurQuote.price)}€*
-       Jour: ${this.truncate(usdQuote.percent_change_24h)}% ${
+       J: ${this.truncate(usdQuote.percent_change_24h)}% ${
         this.growth(usdQuote.percent_change_24h)
-      }
-       Sem.: ${this.truncate(usdQuote.percent_change_7d)}% ${
+      } | S: ${this.truncate(usdQuote.percent_change_7d)}% ${
         this.growth(usdQuote.percent_change_7d)
-      }
-       Mois: ${this.truncate(usdQuote.percent_change_30d)}% ${
+      } | M: ${this.truncate(usdQuote.percent_change_30d)}% ${
         this.growth(usdQuote.percent_change_30d)
       }
        `;
