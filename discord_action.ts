@@ -6,6 +6,7 @@ export class DiscordAction {
   async call(request: Request) {
     // validateRequest() ensures that a request is of POST method and
     // has the following headers.
+    console.log(request);
     const { error } = await validateRequest(request, {
       POST: {
         headers: ["X-Signature-Ed25519", "X-Signature-Timestamp"],
