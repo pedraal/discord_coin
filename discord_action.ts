@@ -4,7 +4,7 @@ import { CoinApi } from "./api.ts";
 export class DiscordAction {
   // The main logic of the Discord Slash Command is defined in this function.
   async call(request: Request) {
-    console.log("test");
+    console.log("test1");
     // validateRequest() ensures that a request is of POST method and
     // has the following headers.
     const { error } = await validateRequest(request, {
@@ -12,9 +12,11 @@ export class DiscordAction {
         headers: ["X-Signature-Ed25519", "X-Signature-Timestamp"],
       },
     });
+    console.log(error);
     if (error) {
       return json({ error: error.message }, { status: error.status });
     }
+    console.log("test2");
 
     // verifySignature() verifies if the request is coming from Discord.
     // When the request's signature is not valid, we return a 401 and this is
@@ -28,6 +30,7 @@ export class DiscordAction {
         },
       );
     }
+    console.log("test3");
 
     const { type = 0, data = { options: [] } } = JSON.parse(body);
     // Discord performs Ping interactions to test our application.
@@ -37,6 +40,7 @@ export class DiscordAction {
         type: 1, // Type 1 in a response is a Pong interaction response type.
       });
     }
+    console.log("test4");
 
     // Type 2 in a request is an ApplicationCommand interaction.
     // It implies that a user has issued a command.
@@ -54,6 +58,7 @@ export class DiscordAction {
         },
       });
     }
+    console.log("test5");
 
     // We will return a bad request error as a valid Discord request
     // shouldn't reach here.
