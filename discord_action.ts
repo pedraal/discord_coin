@@ -14,12 +14,11 @@ export class DiscordAction {
     if (error) {
       return json({ error: error.message }, { status: error.status });
     }
-
+    console.log("error passed");
     // verifySignature() verifies if the request is coming from Discord.
     // When the request's signature is not valid, we return a 401 and this is
     // important as Discord sends invalid requests to test our verification.
     const { valid, body } = await this.verifySignature(request);
-    console.log(valid, body);
     if (!valid) {
       return json(
         { error: "Invalid request" },
@@ -28,6 +27,7 @@ export class DiscordAction {
         },
       );
     }
+    console.log("valid passed");
 
     const { type = 0, data = { options: [] } } = JSON.parse(body);
     // Discord performs Ping interactions to test our application.
@@ -37,10 +37,12 @@ export class DiscordAction {
         type: 1, // Type 1 in a response is a Pong interaction response type.
       });
     }
+    console.log("type 1 passed");
 
     // Type 2 in a request is an ApplicationCommand interaction.
     // It implies that a user has issued a command.
     if (type === 2) {
+      console.log("type 2");
       // const api = new CoinApi();
       // const text = await api.call();
       const text = "test";
