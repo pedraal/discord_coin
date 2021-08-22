@@ -73,8 +73,8 @@ export class CoinApi {
   }
 
   growth(val: number) {
-    if (val > 0) return ":greencircle:";
-    else return ":redcircle:";
+    if (val > 0) return ":green_circle:";
+    else return ":red_circle:";
   }
 }
 
