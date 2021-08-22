@@ -11,7 +11,6 @@ export class DiscordAction {
         headers: ["X-Signature-Ed25519", "X-Signature-Timestamp"],
       },
     });
-    console.log(error);
     if (error) {
       return json({ error: error.message }, { status: error.status });
     }
@@ -20,8 +19,8 @@ export class DiscordAction {
     // When the request's signature is not valid, we return a 401 and this is
     // important as Discord sends invalid requests to test our verification.
     const { valid, body } = await this.verifySignature(request);
+    console.log(valid, body);
     if (!valid) {
-      console.log(valid, body);
       return json(
         { error: "Invalid request" },
         {
@@ -44,7 +43,6 @@ export class DiscordAction {
     if (type === 2) {
       // const api = new CoinApi();
       // const text = await api.call();
-      // console.log(text);
       const text = "test";
       return json({
         // Type 4 responds with the below message retaining the user's
