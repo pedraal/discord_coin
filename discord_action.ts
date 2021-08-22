@@ -40,9 +40,10 @@ export class DiscordAction {
     // Type 2 in a request is an ApplicationCommand interaction.
     // It implies that a user has issued a command.
     if (type === 2) {
-      const api = new CoinApi();
-      const text = await api.call();
-      console.log(text);
+      // const api = new CoinApi();
+      // const text = await api.call();
+      // console.log(text);
+      const text = "test";
       return json({
         // Type 4 responds with the below message retaining the user's
         // input at the top.
