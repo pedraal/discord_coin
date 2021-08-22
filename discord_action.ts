@@ -4,6 +4,7 @@ import { CoinApi } from "./api.ts";
 export class DiscordAction {
   // The main logic of the Discord Slash Command is defined in this function.
   async call(request: Request) {
+    console.log("test");
     // validateRequest() ensures that a request is of POST method and
     // has the following headers.
     const { error } = await validateRequest(request, {

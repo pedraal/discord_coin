@@ -78,7 +78,7 @@ export class CoinApi {
   }
 }
 
-const api = new CoinApi();
-const text = await api.call();
+// const api = new CoinApi();
+// const text = await api.call();
 
-console.log(text);
+// console.log(text);
