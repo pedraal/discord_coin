@@ -62,6 +62,9 @@ export class CoinApi {
        Sem.: ${this.truncate(usdQuote.percent_change_7d)}% ${
         this.growth(usdQuote.percent_change_7d)
       }
+       Mois: ${this.truncate(usdQuote.percent_change_1m)}% ${
+        this.growth(usdQuote.percent_change_1m)
+      }
        `;
     }).join("\n");
 
