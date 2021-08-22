@@ -6,61 +6,65 @@ export class DiscordAction {
   async call(request: Request) {
     // validateRequest() ensures that a request is of POST method and
     // has the following headers.
-    console.log(request);
-    const { error } = await validateRequest(request, {
-      POST: {
-        headers: ["X-Signature-Ed25519", "X-Signature-Timestamp"],
-      },
-    });
-    if (error) {
-      return json({ error: error.message }, { status: error.status });
-    }
-    console.log("error passed");
-    // verifySignature() verifies if the request is coming from Discord.
-    // When the request's signature is not valid, we return a 401 and this is
-    // important as Discord sends invalid requests to test our verification.
-    const { valid, body } = await this.verifySignature(request);
-    console.log(valid, body);
-    if (!valid) {
-      return json(
-        { error: "Invalid request" },
-        {
-          status: 401,
-        },
-      );
-    }
-    console.log("valid passed");
-
-    const { type = 0, data = { options: [] } } = JSON.parse(body);
-    // Discord performs Ping interactions to test our application.
-    // Type 1 in a request implies a Ping interaction.
-    if (type === 1) {
-      return json({
-        type: 1, // Type 1 in a response is a Pong interaction response type.
-      });
-    }
-    console.log("type 1 passed");
-
-    // Type 2 in a request is an ApplicationCommand interaction.
-    // It implies that a user has issued a command.
-    if (type === 2) {
-      console.log("type 2");
-      // const api = new CoinApi();
-      // const text = await api.call();
-      const text = "test";
-      return json({
-        // Type 4 responds with the below message retaining the user's
-        // input at the top.
-        type: 4,
-        data: {
-          content: text,
+    try {
+      console.log(request);
+      const { error } = await validateRequest(request, {
+        POST: {
+          headers: ["X-Signature-Ed25519", "X-Signature-Timestamp"],
         },
       });
-    }
+      if (error) {
+        return json({ error: error.message }, { status: error.status });
+      }
+      console.log("error passed");
+      // verifySignature() verifies if the request is coming from Discord.
+      // When the request's signature is not valid, we return a 401 and this is
+      // important as Discord sends invalid requests to test our verification.
+      const { valid, body } = await this.verifySignature(request);
+      console.log(valid, body);
+      if (!valid) {
+        return json(
+          { error: "Invalid request" },
+          {
+            status: 401,
+          },
+        );
+      }
+      console.log("valid passed");
 
-    // We will return a bad request error as a valid Discord request
-    // shouldn't reach here.
-    return json({ error: "bad request" }, { status: 400 });
+      const { type = 0, data = { options: [] } } = JSON.parse(body);
+      // Discord performs Ping interactions to test our application.
+      // Type 1 in a request implies a Ping interaction.
+      if (type === 1) {
+        return json({
+          type: 1, // Type 1 in a response is a Pong interaction response type.
+        });
+      }
+      console.log("type 1 passed");
+
+      // Type 2 in a request is an ApplicationCommand interaction.
+      // It implies that a user has issued a command.
+      if (type === 2) {
+        console.log("type 2");
+        // const api = new CoinApi();
+        // const text = await api.call();
+        const text = "test";
+        return json({
+          // Type 4 responds with the below message retaining the user's
+          // input at the top.
+          type: 4,
+          data: {
+            content: text,
+          },
+        });
+      }
+
+      // We will return a bad request error as a valid Discord request
+      // shouldn't reach here.
+      return json({ error: "bad request" }, { status: 400 });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async verifySignature(
