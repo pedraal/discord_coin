@@ -19,6 +19,7 @@ export class DiscordAction {
     // When the request's signature is not valid, we return a 401 and this is
     // important as Discord sends invalid requests to test our verification.
     const { valid, body } = await this.verifySignature(request);
+    console.log(valid, body);
     if (!valid) {
       return json(
         { error: "Invalid request" },
