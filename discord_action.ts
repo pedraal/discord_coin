@@ -42,7 +42,7 @@ export class DiscordAction {
     if (type === 2) {
       const api = new CoinApi();
       const text = await api.call();
-
+      console.log(text);
       return json({
         // Type 4 responds with the below message retaining the user's
         // input at the top.

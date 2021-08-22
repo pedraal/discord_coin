@@ -77,3 +77,8 @@ export class CoinApi {
     else return ":redcircle:";
   }
 }
+
+const api = new CoinApi();
+const text = await api.call();
+
+console.log(text);
