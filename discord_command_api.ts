@@ -19,31 +19,35 @@ export class DiscordCommandApi {
       },
     );
 
-    console.log(await req.json());
+    return await req.json();
   }
 
-  // create() {
-  //   fetch(
-  //     `https://discord.com/api/v8/applications/${this.CLIENT_ID}/commands`,
-  //     {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         "Authorization": `Bot ${this.BOT_TOKEN}`,
-  //       },
-  //       body: JSON.stringify({
-  //         "name": "hello",
-  //         "description": "Greet a person",
-  //         "options": [{
-  //           "name": "name",
-  //           "description": "The name of the person",
-  //           "type": 3,
-  //           "required": true,
-  //         }],
-  //       }),
-  //     },
-  //   );
-  // }
+  async create() {
+    const req = await fetch(
+      `https://discord.com/api/v8/applications/${this.CLIENT_ID}/commands`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bot ${this.BOT_TOKEN}`,
+        },
+        body: JSON.stringify({
+          "name": "teststonks",
+          "description": "Affiche la valeur de l'ADA, BTC, ETH, LINK",
+          "options": [
+            // {
+            // "name": "name",
+            // "description": "The name of the person",
+            // "type": 3,
+            // "required": true,
+            // },
+          ],
+        }),
+      },
+    );
+
+    console.log(await req.json());
+  }
 
   // update() {
   // }
