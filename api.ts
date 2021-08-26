@@ -14,7 +14,7 @@ export class CoinApi {
     this.options = options;
   }
 
-  async call() {
+  async call(options?: { short: boolean }) {
     // deno-lint-ignore no-explicit-any
     const results: any = {};
     for await (const convert of this.options.converts) {
@@ -54,16 +54,28 @@ export class CoinApi {
       const coin = results[c];
       const eurQuote = coin.quote.EUR;
       const usdQuote = coin.quote.USD;
-      return `**${results[c].name} (${c}) :**
+
+      if (options?.short) {
+        return `**${results[c].name} (${c}) :**
+       *$${this.truncate(usdQuote.price)} / ${this.truncate(eurQuote.price)}€*
+       H: ${this.truncate(usdQuote.percent_change_1h)}% ${
+          this.growth(usdQuote.percent_change_1h)
+        } | J: ${this.truncate(usdQuote.percent_change_24h)}% ${
+          this.growth(usdQuote.percent_change_24h)
+        }
+       `;
+      } else {
+        return `**${results[c].name} (${c}) :**
        *$${this.truncate(usdQuote.price)} / ${this.truncate(eurQuote.price)}€*
        J: ${this.truncate(usdQuote.percent_change_24h)}% ${
-        this.growth(usdQuote.percent_change_24h)
-      } | S: ${this.truncate(usdQuote.percent_change_7d)}% ${
-        this.growth(usdQuote.percent_change_7d)
-      } | M: ${this.truncate(usdQuote.percent_change_30d)}% ${
-        this.growth(usdQuote.percent_change_30d)
-      }
+          this.growth(usdQuote.percent_change_24h)
+        } | S: ${this.truncate(usdQuote.percent_change_7d)}% ${
+          this.growth(usdQuote.percent_change_7d)
+        } | M: ${this.truncate(usdQuote.percent_change_30d)}% ${
+          this.growth(usdQuote.percent_change_30d)
+        }
        `;
+      }
     }).join("\n");
 
     return text;
