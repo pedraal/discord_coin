@@ -39,7 +39,7 @@ export async function call(request: Request) {
     // It implies that a user has issued a command.
     if (type === 2) {
       // deno-lint-ignore no-explicit-any
-      const { value: shortValue } = data.options.find((option: any) =>
+      const { value: shortValue } = data.options?.find((option: any) =>
         option.name === "short"
       );
 
