@@ -38,8 +38,9 @@ export async function call(request: Request) {
     // Type 2 in a request is an ApplicationCommand interaction.
     // It implies that a user has issued a command.
     if (type === 2) {
+      const options = data.options || [];
       // deno-lint-ignore no-explicit-any
-      const short = data.options.find((option: any) => option.name === "short");
+      const short = options.find((option: any) => option.name === "short");
       const api = new CoinApi();
       const text = await api.call({ short: short ? short.value : false });
       // const text = "test";
