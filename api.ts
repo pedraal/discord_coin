@@ -8,7 +8,7 @@ export class CoinApi {
   constructor(
     options: CoinApiOptions = {
       converts: ["EUR", "USD"],
-      symbols: ["BTC", "ETH", "ADA", "LINK"],
+      symbols: ["BTC", "ETH", "ADA", "LINK", "DOT", "ATOM"],
     },
   ) {
     this.options = options;
@@ -92,6 +92,6 @@ export class CoinApi {
 }
 
 // const api = new CoinApi();
-// const text = await api.call();
+// const text = await api.call({ short: true });
 
 // console.log(text);
