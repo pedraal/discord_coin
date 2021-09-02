@@ -74,7 +74,13 @@ export class CoinApi {
     let content;
     if (options?.meme) {
       content = `${options.meme} sur ${options.short ? "1h" : "24h"} : ${
-        this.truncate(results[options.meme].quote.USD.percent_change_1h)
+        this.truncate(
+          results[options.meme].quote.USD[
+            options.short
+              ? "percent_change_1h"
+              : "percent_change_24h"
+          ],
+        )
       }%
   ${this.calcScore(results[options.meme], options.short)}`;
     } else {
@@ -124,13 +130,13 @@ export class CoinApi {
     const value = short
       ? coin.quote.USD.percent_change_1h
       : coin.quote.USD.percent_change_24h;
-    if (value >= 10.00) {
+    if ((value * 100) >= (100 * 10)) {
       return this.memes.best;
-    } else if (value >= 3.00) {
+    } else if ((value * 100) >= (100 * 3)) {
       return this.memes.good;
-    } else if (value >= -3.00) {
+    } else if ((value * 100) >= (100 * -3)) {
       return this.memes.neutral;
-    } else if (value >= -10.00) {
+    } else if ((value * 100) >= (100 * -10)) {
       return this.memes.bad;
     } else {
       return this.memes.worst;
