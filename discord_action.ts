@@ -41,8 +41,13 @@ export async function call(request: Request) {
       const options = data.options || [];
       // deno-lint-ignore no-explicit-any
       const short = options.find((option: any) => option.name === "short");
+      // deno-lint-ignore no-explicit-any
+      const meme = options.find((option: any) => option.name === "meme");
       const api = new CoinApi();
-      const text = await api.call({ short: short ? short.value : false });
+      const text = await api.call({
+        short: short ? short.value : false,
+        meme: meme ? meme.value : false,
+      });
       // const text = "test";
       return json({
         // Type 4 responds with the below message retaining the user's
