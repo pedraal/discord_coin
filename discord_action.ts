@@ -1,5 +1,5 @@
 import { json, nacl, validateRequest } from "./deps.ts";
-import { CoinApi } from "./api.ts";
+import { CoinApi } from "./coinmarketcap_api.ts";
 
 export async function call(request: Request) {
   // validateRequest() ensures that a request is of POST method and

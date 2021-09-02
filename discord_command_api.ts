@@ -11,14 +11,16 @@ export class DiscordCommandApi {
       required: boolean;
     }[];
   };
+  requestHeaders: { "Content-Type": string; Authorization: string };
+  baseURL: string;
 
   constructor() {
     this.BOT_TOKEN = Deno.env.get("BOT_TOKEN");
     this.CLIENT_ID = Deno.env.get("CLIENT_ID");
 
     this.commandBody = {
-      "name": "tstonks",
-      "description": "Affiche les valeurs de l'ADA, BTC, ETH, LINK",
+      "name": "stonks",
+      "description": "Affiche les valeurs des coins suivis",
       "options": [
         {
           "name": "short",
@@ -26,19 +28,29 @@ export class DiscordCommandApi {
           "type": 5,
           "required": false,
         },
+        {
+          "name": "meme",
+          "description": "Affiche des gifs représentant les valeurs du jour",
+          "type": 3,
+          "required": false,
+        },
       ],
     };
+
+    this.requestHeaders = {
+      "Content-Type": "application/json",
+      "Authorization": `Bot ${this.BOT_TOKEN}`,
+    };
+    this.baseURL =
+      `https://discord.com/api/v8/applications/${this.CLIENT_ID}/commands`;
   }
 
   async get() {
     const req = await fetch(
-      `https://discord.com/api/v8/applications/${this.CLIENT_ID}/commands`,
+      this.baseURL,
       {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bot ${this.BOT_TOKEN}`,
-        },
+        headers: this.requestHeaders,
       },
     );
 
@@ -47,13 +59,10 @@ export class DiscordCommandApi {
 
   async create() {
     const req = await fetch(
-      `https://discord.com/api/v8/applications/${this.CLIENT_ID}/commands`,
+      this.baseURL,
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bot ${this.BOT_TOKEN}`,
-        },
+        headers: this.requestHeaders,
         body: JSON.stringify(this.commandBody),
       },
     );
@@ -63,13 +72,10 @@ export class DiscordCommandApi {
 
   async update(id: string) {
     const req = await fetch(
-      `https://discord.com/api/v8/applications/${this.CLIENT_ID}/commands/${id}`,
+      this.baseURL + `/${id}`,
       {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bot ${this.BOT_TOKEN}`,
-        },
+        headers: this.requestHeaders,
         body: JSON.stringify(this.commandBody),
       },
     );
@@ -79,13 +85,10 @@ export class DiscordCommandApi {
 
   async delete(id: string) {
     await fetch(
-      `https://discord.com/api/v8/applications/${this.CLIENT_ID}/commands/${id}`,
+      this.baseURL + `/${id}`,
       {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bot ${this.BOT_TOKEN}`,
-        },
+        headers: this.requestHeaders,
       },
     );
   }
