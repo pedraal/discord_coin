@@ -124,14 +124,13 @@ export class CoinApi {
     const value = short
       ? coin.quote.USD.percent_change_1h
       : coin.quote.USD.percent_change_24h;
-
-    if (value >= 10) {
+    if (value >= 10.00) {
       return this.memes.best;
-    } else if (value >= 3) {
+    } else if (value >= 3.00) {
       return this.memes.good;
-    } else if (value >= -3) {
+    } else if (value >= -3.00) {
       return this.memes.neutral;
-    } else if (value >= -10) {
+    } else if (value >= -10.00) {
       return this.memes.bad;
     } else {
       return this.memes.worst;
