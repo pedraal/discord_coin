@@ -107,7 +107,7 @@ export class CoinApi {
         }% ${this.growth(usdQuote.percent_change_7d)} | M: ${
           this.truncate(usdQuote.percent_change_30d)
         }% ${this.growth(usdQuote.percent_change_30d)}`;
-      }).join("\n");
+      }).join("\n\n");
     }
 
     return content;
@@ -142,8 +142,6 @@ export class CoinApi {
 
   // deno-lint-ignore no-explicit-any
   title(coin: string, quote: any) {
-    return `**${coin.length === 4 ? coin : coin + " "} :** *$${
-      this.truncate(quote.price)
-    }*`;
+    return `**${coin} :** *$${this.truncate(quote.price)}*`;
   }
 }
