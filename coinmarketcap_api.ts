@@ -98,7 +98,7 @@ export class CoinApi {
         const coin = results[c];
         const usdQuote = coin.quote.USD;
 
-        return `${this.title(c, usdQuote)}* H: ${
+        return `${this.title(c, usdQuote)} | H: ${
           this.truncate(usdQuote.percent_change_1h)
         }% ${this.growth(usdQuote.percent_change_1h)} | J: ${
           this.truncate(usdQuote.percent_change_24h)
