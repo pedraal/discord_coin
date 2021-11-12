@@ -93,3 +93,15 @@ export class DiscordCommandApi {
     );
   }
 }
+
+const api = new DiscordCommandApi();
+
+// console.log(await api.get());
+await api.create();
+// console.log(await api.get());
+// await api.delete("880216063978135623");
+// console.log(await api.get());
+// await api.update("878420457597042708");
+
+// MAIN : BOT_TOKEN=ODc4NDE5NDUyMzUyNDA5NjMw.YSA53Q.mfPnBH58HKJrsV7xmjWyXnghm4U CLIENT_ID=878419452352409630
+// STAGING : BOT_TOKEN=ODgwMjA3NzA1MjM3NzQ5ODMw.YSa7Tg.Xaaq2D9R4bWsrQUCG47w3GFIJcU CLIENT_ID=880207705237749830
