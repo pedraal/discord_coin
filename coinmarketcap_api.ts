@@ -83,9 +83,9 @@ export class CoinApi {
 
     let content;
     if (options?.meme) {
-      content = `${this.title(options.meme)} *$${
-        this.truncate(results[options.meme].quote.USD.price)
-      }* | ${
+      content = `${
+        this.title(options.meme, results[options.meme].quote.USD)
+      } | ${
         this.truncate(
           results[options.meme].quote.USD[
             options.short ? "percent_change_1h" : "percent_change_24h"
@@ -98,7 +98,7 @@ export class CoinApi {
         const coin = results[c];
         const usdQuote = coin.quote.USD;
 
-        return `${this.title(c)} | H: ${
+        return `${this.title(c, usdQuote)} | H: ${
           this.truncate(usdQuote.percent_change_1h)
         }% ${this.growth(usdQuote.percent_change_1h)} | J: ${
           this.truncate(usdQuote.percent_change_24h)
@@ -106,9 +106,7 @@ export class CoinApi {
           this.truncate(usdQuote.percent_change_7d)
         }% ${this.growth(usdQuote.percent_change_7d)} | M: ${
           this.truncate(usdQuote.percent_change_30d)
-        }% ${this.growth(usdQuote.percent_change_30d)} | *$${
-          this.truncate(usdQuote.price)
-        }*`;
+        }% ${this.growth(usdQuote.percent_change_30d)}`;
       }).join("\n");
     }
 
@@ -142,7 +140,10 @@ export class CoinApi {
     }
   }
 
-  title(coin: string) {
-    return `**${coin.length === 4 ? coin : coin + " "} :**`;
+  // deno-lint-ignore no-explicit-any
+  title(coin: string, quote: any) {
+    return `**${coin.length === 4 ? coin : coin + " "} :** *$${
+      this.truncate(quote.price)
+    }*`;
   }
 }
