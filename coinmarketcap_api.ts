@@ -146,9 +146,3 @@ export class CoinApi {
     return `**${coin} :** *$${this.truncate(quote.price)}*`;
   }
 }
-
-// const api = new CoinApi();
-// const text = await api.call({});
-
-// console.log(text);
-// API_TOKEN=50cdb553-7762-4ed8-800b-814be6445c9e
