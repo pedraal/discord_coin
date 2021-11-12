@@ -18,8 +18,18 @@ export class CoinApi {
 
   constructor(
     options: CoinApiOptions = {
-      converts: ["EUR", "USD"],
-      symbols: ["BTC", "ETH", "ADA", "LINK", "DOT", "ATOM"],
+      converts: ["USD"],
+      symbols: [
+        "BTC",
+        "ETH",
+        "ADA",
+        "LINK",
+        "SOL",
+        "BNB",
+        "CAKE",
+        "DOT",
+        "KCS",
+      ],
     },
   ) {
     this.options = options;
@@ -73,44 +83,31 @@ export class CoinApi {
 
     let content;
     if (options?.meme) {
-      content = `${options.meme} sur ${options.short ? "1h" : "24h"} : ${
+      content = `${
+        this.title(options.meme, results[options.meme].quote.USD)
+      } | ${
         this.truncate(
           results[options.meme].quote.USD[
-            options.short
-              ? "percent_change_1h"
-              : "percent_change_24h"
+            options.short ? "percent_change_1h" : "percent_change_24h"
           ],
         )
-      }%
+      }% en ${options.short ? "1h" : "24h"}
   ${this.calcScore(results[options.meme], options.short)}`;
     } else {
       content = coinsKeys.map((c) => {
         const coin = results[c];
-        const eurQuote = coin.quote.EUR;
         const usdQuote = coin.quote.USD;
 
-        if (options?.short) {
-          return `**${results[c].name} (${c}) :**
-       *$${this.truncate(usdQuote.price)} / ${this.truncate(eurQuote.price)}€*
-       H: ${this.truncate(usdQuote.percent_change_1h)}% ${
-            this.growth(usdQuote.percent_change_1h)
-          } | J: ${this.truncate(usdQuote.percent_change_24h)}% ${
-            this.growth(usdQuote.percent_change_24h)
-          }
-       `;
-        } else {
-          return `**${results[c].name} (${c}) :**
-       *$${this.truncate(usdQuote.price)} / ${this.truncate(eurQuote.price)}€*
-       J: ${this.truncate(usdQuote.percent_change_24h)}% ${
-            this.growth(usdQuote.percent_change_24h)
-          } | S: ${this.truncate(usdQuote.percent_change_7d)}% ${
-            this.growth(usdQuote.percent_change_7d)
-          } | M: ${this.truncate(usdQuote.percent_change_30d)}% ${
-            this.growth(usdQuote.percent_change_30d)
-          }
-       `;
-        }
-      }).join("\n");
+        return `${this.title(c, usdQuote)} | H: ${
+          this.truncate(usdQuote.percent_change_1h)
+        }% ${this.growth(usdQuote.percent_change_1h)} | J: ${
+          this.truncate(usdQuote.percent_change_24h)
+        }% ${this.growth(usdQuote.percent_change_24h)} | S: ${
+          this.truncate(usdQuote.percent_change_7d)
+        }% ${this.growth(usdQuote.percent_change_7d)} | M: ${
+          this.truncate(usdQuote.percent_change_30d)
+        }% ${this.growth(usdQuote.percent_change_30d)}`;
+      }).join("\n\n");
     }
 
     return content;
@@ -141,5 +138,10 @@ export class CoinApi {
     } else {
       return this.memes.worst;
     }
+  }
+
+  // deno-lint-ignore no-explicit-any
+  title(coin: string, quote: any) {
+    return `**${coin} :** *$${this.truncate(quote.price)}*`;
   }
 }
