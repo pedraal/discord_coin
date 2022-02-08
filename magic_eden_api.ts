@@ -5,7 +5,22 @@ const magic_eden_base_url =
 export class MagicEdenApi {
   nftSymbols: string[];
 
-  constructor(nftSymbols: string[] = ["enviro", "nftabs"]) {
+  constructor(
+    nftSymbols: string[] = [
+      "enviro",
+      "nftabs",
+      "metavillage",
+      "solsteads_surreal_estate",
+      "monsterz",
+      "spookyz",
+      "neonexus_residential",
+      "neonexus_commercial",
+      "sovana",
+      "portals",
+      "bounty_hunter_space_guild",
+      "the_tower",
+    ],
+  ) {
     this.nftSymbols = nftSymbols;
   }
 
@@ -20,6 +35,8 @@ export class MagicEdenApi {
         floor: (Math.floor(d.results.floorPrice * 0.000000001 * 100) / 100)
           .toFixed(2),
       };
-    }).map((d) => `${d.symbol} : ${d.floor}`).join(`\n`);
+    }).map((d) => `${d.symbol} : ${d.floor} ◎`).join(
+      ` :small_orange_diamond:  `,
+    );
   }
 }
