@@ -34,6 +34,12 @@ export class DiscordCommandApi {
           "type": 3,
           "required": false,
         },
+        {
+          "name": "nft",
+          "description": "Affiche le FP des NFT suivis",
+          "type": 3,
+          "required": false,
+        },
       ],
     };
 
