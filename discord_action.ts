@@ -1,5 +1,6 @@
 import { json, nacl, validateRequest } from "./deps.ts";
 import { CoinApi } from "./coinmarketcap_api.ts";
+import { MagicEdenApi } from "./magic_eden_api.ts";
 
 export async function call(request: Request) {
   // validateRequest() ensures that a request is of POST method and
@@ -39,24 +40,40 @@ export async function call(request: Request) {
     // It implies that a user has issued a command.
     if (type === 2) {
       const options = data.options || [];
+
+      // deno-lint-ignore no-explicit-any
+      const nft = options.find((option: any) => option.name === "nft");
       // deno-lint-ignore no-explicit-any
       const short = options.find((option: any) => option.name === "short");
       // deno-lint-ignore no-explicit-any
       const meme = options.find((option: any) => option.name === "meme");
-      const api = new CoinApi();
-      const text = await api.call({
-        short: short ? short.value : false,
-        meme: meme ? meme.value : false,
-      });
-      // const text = "test";
-      return json({
-        // Type 4 responds with the below message retaining the user's
-        // input at the top.
-        type: 4,
-        data: {
-          content: text,
-        },
-      });
+      if (nft) {
+        const meApi = new MagicEdenApi();
+        const text = await meApi.call();
+        return json({
+          // Type 4 responds with the below message retaining the user's
+          // input at the top.
+          type: 4,
+          data: {
+            content: text,
+          },
+        });
+      } else {
+        const api = new CoinApi();
+        const text = await api.call({
+          short: short ? short.value : false,
+          meme: meme ? meme.value : false,
+        });
+        // const text = "test";
+        return json({
+          // Type 4 responds with the below message retaining the user's
+          // input at the top.
+          type: 4,
+          data: {
+            content: text,
+          },
+        });
+      }
     }
 
     // We will return a bad request error as a valid Discord request
