@@ -40,7 +40,14 @@ export async function call(request: Request) {
     // It implies that a user has issued a command.
     if (type === 2) {
       const options = data.options || [];
-      if (options.nft) {
+
+      // deno-lint-ignore no-explicit-any
+      const nft = options.find((option: any) => option.name === "nft");
+      // deno-lint-ignore no-explicit-any
+      const short = options.find((option: any) => option.name === "short");
+      // deno-lint-ignore no-explicit-any
+      const meme = options.find((option: any) => option.name === "meme");
+      if (nft) {
         const meApi = new MagicEdenApi();
         const text = await meApi.call();
         return json({
@@ -52,10 +59,6 @@ export async function call(request: Request) {
           },
         });
       } else {
-        // deno-lint-ignore no-explicit-any
-        const short = options.find((option: any) => option.name === "short");
-        // deno-lint-ignore no-explicit-any
-        const meme = options.find((option: any) => option.name === "meme");
         const api = new CoinApi();
         const text = await api.call({
           short: short ? short.value : false,
