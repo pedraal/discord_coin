@@ -37,7 +37,7 @@ export class MagicEdenApi {
           .toFixed(2),
       };
     }).map((d) => `${d.symbol} : ${d.floor} ◎`).join(
-      ` :small_orange_diamond:  `,
+      ` :small_orange_diamond: `,
     );
   }
 }
