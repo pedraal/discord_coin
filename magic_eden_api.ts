@@ -8,17 +8,18 @@ export class MagicEdenApi {
   constructor(
     nftSymbols: string[] = [
       "enviro",
-      "nftabs",
       "metavillage",
+      "the_tower",
       "solsteads_surreal_estate",
-      "monsterz",
-      "spookyz",
+      "cryptocribs",
       "neonexus_residential",
       "neonexus_commercial",
       "sovana",
       "portals",
+      "nftabs",
+      "monsterz",
+      "spookyz",
       "bounty_hunter_space_guild",
-      "the_tower",
     ],
   ) {
     this.nftSymbols = nftSymbols;
