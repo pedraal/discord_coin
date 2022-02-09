@@ -1,10 +1,10 @@
-export interface CoinApiOptions {
+export interface CoinMarketCapApiOptions {
   converts: string[];
   symbols: string[];
 }
 
-export class CoinApi {
-  options: CoinApiOptions;
+export class CoinMarketCapApi {
+  options: CoinMarketCapApiOptions;
   memes: {
     worst: string;
     bad: string;
@@ -17,7 +17,7 @@ export class CoinApi {
   };
 
   constructor(
-    options: CoinApiOptions = {
+    options: CoinMarketCapApiOptions = {
       converts: ["USD"],
       symbols: [
         "BTC",
