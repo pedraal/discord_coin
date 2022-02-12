@@ -6,8 +6,11 @@ serve({
 });
 
 import { json, nacl, validateRequest } from "./deps.ts";
-import { StonksCommand } from "./commands/stonks.ts";
 import { StonqCommand } from "./commands/stonq.ts";
+
+const commands = [
+  { name: "stonq", class: StonqCommand },
+];
 
 export async function call(request: Request) {
   // validateRequest() ensures that a request is of POST method and
@@ -44,13 +47,11 @@ export async function call(request: Request) {
     } else if (type === 2) {
       // Type 2 in a request is an ApplicationCommand interaction.
       // It implies that a user has issued a command.
-      if (data.name === "stonks") {
-        const stonksCommand = new StonksCommand(data);
-        const response = await stonksCommand.handler();
-        return json(response);
-      } else if (data.name === "stonq") {
-        const stonqCommand = new StonqCommand(data);
-        const response = await stonqCommand.handler();
+      const command = commands.find((c) => c.name === data.name);
+      if (command) {
+        const commandClass = command.class;
+        const commandInstance = new commandClass(data);
+        const response = await commandInstance.handler();
         return json(response);
       } else {
         return json({ error: "bad request" }, { status: 400 });
