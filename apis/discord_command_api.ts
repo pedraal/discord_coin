@@ -1,8 +1,6 @@
-import { StonksCommand } from "../commands/stonks.ts";
 import { StonqCommand } from "../commands/stonq.ts";
 
 const definitions = {
-  stonks: StonksCommand.definition(),
   stonq: StonqCommand.definition(),
 };
 
@@ -26,7 +24,7 @@ export class DiscordCommandApi {
     this.BOT_TOKEN = Deno.env.get("BOT_TOKEN");
     this.CLIENT_ID = Deno.env.get("CLIENT_ID");
 
-    this.commandBody = definitions[command || "stonks"];
+    this.commandBody = definitions[command || "stonq"];
 
     this.requestHeaders = {
       "Content-Type": "application/json",
