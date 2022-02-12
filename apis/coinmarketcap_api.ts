@@ -159,7 +159,6 @@ export class CoinMarketCapApi {
   }
 
   async coinDetails(options: any) {
-    console.log(options);
     const symbol = options.find((o: any) => o.name === "symbol");
     const short = options.find((o: any) => o.name === "short");
     const url =
