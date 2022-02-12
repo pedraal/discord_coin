@@ -59,7 +59,6 @@ export class DiscordCommandApi {
     );
 
     const json = await req.json();
-    console.log(json);
 
     return json;
   }
@@ -73,8 +72,9 @@ export class DiscordCommandApi {
         body: JSON.stringify(this.commandBody),
       },
     );
+    const json = await req.json();
 
-    console.log(await req.json());
+    return json;
   }
 
   async delete(id: string) {
