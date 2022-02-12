@@ -2,27 +2,27 @@ import { CoinMarketCapApi } from "../apis/coinmarketcap_api.ts";
 import { MagicEdenApi } from "../apis/magic_eden_api.ts";
 
 export class StonqCommand {
-  data: any;
-  constructor(data: any) {
-    this.data = data;
+  interaction: any;
+  constructor(interaction: any) {
+    this.interaction = interaction;
   }
 
   async handler() {
-    const subCommand = this.data.options[0];
-    if (subCommand?.name === "coin") {
+    const subCommandGroup = this.interaction.options[0];
+    if (subCommandGroup?.name === "coin") {
       return {
         type: 4,
         data: {
-          content: await this.coinCommand(subCommand.options[0]),
+          content: await this.coinCommand(subCommandGroup.options[0]),
         },
       };
-    } else if (subCommand?.name === "nft") {
+    } else if (subCommandGroup?.name === "nft") {
       return {
         type: 4,
-        data: await this.nftCommand(subCommand.options[0]),
+        data: await this.nftCommand(subCommandGroup.options[0]),
       };
     } else {
-      throw new Error("Invalid subCommand");
+      throw new Error("Invalid subCommandGroup");
     }
   }
 
