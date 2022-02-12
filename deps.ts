@@ -10,4 +10,6 @@ export {
 // from Discord.
 import nacl from "https://cdn.skypack.dev/tweetnacl@v1.0.3?dts";
 
-export { nacl };
+import AsciiTable, { AsciiAlign } from "https://deno.land/x/ascii_table/mod.ts";
+
+export { AsciiAlign, AsciiTable, nacl };

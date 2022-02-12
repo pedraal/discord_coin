@@ -1,3 +1,11 @@
+import { StonksCommand } from "../commands/stonks.ts";
+import { StonqCommand } from "../commands/stonq.ts";
+
+const definitions = {
+  stonks: StonksCommand.definition(),
+  stonq: StonqCommand.definition(),
+};
+
 export class DiscordCommandApi {
   BOT_TOKEN: string | undefined;
   CLIENT_ID: string | undefined;
@@ -6,42 +14,19 @@ export class DiscordCommandApi {
     description: string;
     options: {
       name: string;
-      description: string;
+      description?: string;
       type: number;
-      required: boolean;
+      required?: boolean;
     }[];
   };
   requestHeaders: { "Content-Type": string; Authorization: string };
   baseURL: string;
 
-  constructor() {
+  constructor(command?: keyof typeof definitions) {
     this.BOT_TOKEN = Deno.env.get("BOT_TOKEN");
     this.CLIENT_ID = Deno.env.get("CLIENT_ID");
 
-    this.commandBody = {
-      "name": "stonks",
-      "description": "Affiche les valeurs des coins suivis",
-      "options": [
-        {
-          "name": "short",
-          "description": "Affiche les valeurs à très court terme",
-          "type": 5,
-          "required": false,
-        },
-        {
-          "name": "meme",
-          "description": "Affiche des gifs représentant les valeurs du jour",
-          "type": 3,
-          "required": false,
-        },
-        {
-          "name": "nft",
-          "description": "Affiche le FP des NFT suivis",
-          "type": 5,
-          "required": false,
-        },
-      ],
-    };
+    this.commandBody = definitions[command || "stonks"];
 
     this.requestHeaders = {
       "Content-Type": "application/json",
@@ -73,7 +58,10 @@ export class DiscordCommandApi {
       },
     );
 
-    console.log(await req.json());
+    const json = await req.json();
+    console.log(json);
+
+    return json;
   }
 
   async update(id: string) {
