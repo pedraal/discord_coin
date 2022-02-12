@@ -1,10 +1,12 @@
-export interface CoinApiOptions {
-  converts: string[];
+import { AsciiTable } from "../deps.ts";
+
+export interface CoinMarketCapApiOptions {
+  fiat: string;
   symbols: string[];
 }
 
-export class CoinApi {
-  options: CoinApiOptions;
+export class CoinMarketCapApi {
+  options: CoinMarketCapApiOptions;
   memes: {
     worst: string;
     bad: string;
@@ -17,8 +19,8 @@ export class CoinApi {
   };
 
   constructor(
-    options: CoinApiOptions = {
-      converts: ["USD"],
+    options: CoinMarketCapApiOptions = {
+      fiat: "USD",
       symbols: [
         "BTC",
         "ETH",
@@ -55,7 +57,7 @@ export class CoinApi {
   async call(options?: { short?: boolean; meme?: string }) {
     // deno-lint-ignore no-explicit-any
     const results: any = {};
-    for await (const convert of this.options.converts) {
+    for await (const convert of this.options.fiat) {
       const symbolsString = options?.meme
         ? options.meme
         : this.options.symbols.join(",");
@@ -92,7 +94,7 @@ export class CoinApi {
           ],
         )
       }% en ${options.short ? "1h" : "24h"}
-  ${this.calcScore(results[options.meme], options.short)}`;
+    ${this.pickMeme(results[options.meme], options.short)}`;
     } else {
       content = coinsKeys.map((c) => {
         const coin = results[c];
@@ -113,17 +115,81 @@ export class CoinApi {
     return content;
   }
 
+  async coinsTable(options: any) {
+    const fullOption = options.find((o: any) => o.name === "full");
+    const url =
+      `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${
+        this.options.symbols.join(",")
+      }&convert=${this.options.fiat}`;
+    const res = await fetch(url, this.apiOptions);
+    const coins = (await res.json()).data;
+
+    const coinsValues = Object.values(coins);
+
+    const table = new AsciiTable("Coins");
+
+    if (fullOption) {
+      table
+        .setHeading("Symbol", "Price", "H", "J", "S", "M");
+    } else {
+      table
+        .setHeading("Symbol", "Price", "H", "J");
+    }
+
+    coinsValues.sort((a: any, b: any) => {
+      return b.quote.USD.price - a.quote.USD.price;
+    }).forEach((c: any) => {
+      const row = [
+        c.symbol,
+        this.truncate(c.quote.USD.price),
+        this.truncate(c.quote.USD.percent_change_1h),
+        this.truncate(c.quote.USD.percent_change_24h),
+      ];
+
+      if (fullOption) {
+        row.push(
+          this.truncate(c.quote.USD.percent_change_7d),
+          this.truncate(c.quote.USD.percent_change_30d),
+        );
+      }
+      table.addRow(row);
+    });
+
+    return "```\n" + table.toString() + "\n```";
+  }
+
+  async coinDetails(options: any) {
+    const symbol = options.find((o: any) => o.name === "symbol");
+    const short = options.find((o: any) => o.name === "short");
+    const url =
+      `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${symbol.value}&convert=${this.options.fiat}`;
+
+    const res = await fetch(url, this.apiOptions);
+    const coins = (await res.json()).data;
+
+    const coinValues: any = Object.values(coins).shift();
+
+    return `${this.title(coinValues.symbol, coinValues.quote.USD)} | ${
+      this.truncate(
+        coinValues.quote.USD[
+          short?.value ? "percent_change_1h" : "percent_change_24h"
+        ],
+      )
+    }% en ${short?.value ? "1h" : "24h"}
+    ${this.pickMeme(coinValues, short?.value)}`;
+  }
+
   truncate(val: number) {
     return Math.round(val * 100) / 100;
   }
 
   growth(val: number) {
-    if (val > 0) return ":green_circle:";
-    else return ":red_circle:";
+    if (val > 0) return "🟢";
+    else return "🔴";
   }
 
   // deno-lint-ignore no-explicit-any
-  calcScore(coin: any, short = false) {
+  pickMeme(coin: any, short = false) {
     const value = short
       ? coin.quote.USD.percent_change_1h
       : coin.quote.USD.percent_change_24h;

@@ -5,9 +5,11 @@ export {
   json,
   serve,
   validateRequest,
-} from "https://deno.land/x/sift@0.1.7/mod.ts";
+} from "https://deno.land/x/sift@0.4.2/mod.ts";
 // TweetNaCl is a cryptography library that we use to verify requests
 // from Discord.
 import nacl from "https://cdn.skypack.dev/tweetnacl@v1.0.3?dts";
 
-export { nacl }
+import AsciiTable, { AsciiAlign } from "https://deno.land/x/ascii_table/mod.ts";
+
+export { AsciiAlign, AsciiTable, nacl };
