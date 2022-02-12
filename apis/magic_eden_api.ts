@@ -52,7 +52,9 @@ export class MagicEdenApi {
       table.addRow(d.symbol, d.floor);
     });
 
-    return "```\n" + table.toString() + "\n```";
+    return {
+      content: "```\n" + table.toString() + "\n```",
+    };
   }
 
   async nftDetails(options: any) {
