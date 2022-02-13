@@ -25,12 +25,15 @@ export class CoinMarketCapApi {
         "BTC",
         "ETH",
         "ADA",
-        "LINK",
         "SOL",
         "BNB",
         "CAKE",
         "DOT",
         "KCS",
+        "MATIC"
+        "CRO",
+        "AVAX",
+        "FLUX"
       ],
     },
   ) {
