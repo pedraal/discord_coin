@@ -30,10 +30,10 @@ export class CoinMarketCapApi {
         "CAKE",
         "DOT",
         "KCS",
-        "MATIC"
+        "MATIC",
         "CRO",
         "AVAX",
-        "FLUX"
+        "FLUX",
       ],
     },
   ) {
