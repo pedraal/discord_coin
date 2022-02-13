@@ -23,6 +23,7 @@ export class MagicEdenApi {
       "spookyz",
       "bounty_hunter_space_guild",
       "entrance",
+      "tiny_colony"
     ],
   ) {
     this.nftSymbols = nftSymbols;
