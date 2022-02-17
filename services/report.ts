@@ -8,5 +8,5 @@ export async function reportHandler(_request: Request) {
   const coinTable = await cmcApi.discordTable([{ name: "full", value: true }]);
   const nftTable = await meApi.discordTable();
 
-  return new Response([coinTable, nftTable.content].join("\n\n"));
+  return new Response([coinTable.content, nftTable.content].join("\n\n"));
 }
