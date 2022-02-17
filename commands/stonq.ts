@@ -27,24 +27,24 @@ export class StonqCommand {
   }
 
   async coinCommand(subCommand: any) {
-    const cmcApi = new CoinMarketCapApi();
+    const cmcApi = await CoinMarketCapApi.init();
 
     if (subCommand.name === "all") {
-      return await cmcApi.coinsTable(subCommand.options);
+      return await cmcApi.discordTable(subCommand.options);
     } else if (subCommand.name === "one") {
-      return await cmcApi.coinDetails(subCommand.options);
+      return await cmcApi.discordDetails(subCommand.options);
     } else {
       throw new Error("Invalid subCommand");
     }
   }
 
   async nftCommand(subCommand: any) {
-    const meApi = new MagicEdenApi();
+    const meApi = await MagicEdenApi.init();
 
     if (subCommand.name === "all") {
-      return await meApi.nftsTable();
+      return await meApi.discordTable();
     } else if (subCommand.name === "one") {
-      return await meApi.nftDetails(subCommand.options);
+      return await meApi.discordDetails(subCommand.options);
     } else {
       throw new Error("Invalid subcommand");
     }

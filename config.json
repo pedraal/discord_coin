@@ -1,0 +1,36 @@
+{
+  "coins": {
+    "fiat": "USD",
+    "symbols": [
+      "BTC",
+      "ETH",
+      "ADA",
+      "SOL",
+      "BNB",
+      "CAKE",
+      "DOT",
+      "KCS",
+      "MATIC",
+      "CRO",
+      "AVAX",
+      "FLUX"
+    ]
+  },
+  "nfts": [
+    "enviro",
+    "metavillage",
+    "the_tower",
+    "solsteads_surreal_estate",
+    "cryptocribs",
+    "neonexus_residential",
+    "neonexus_commercial",
+    "sovana",
+    "portals",
+    "nftabs",
+    "monsterz",
+    "spookyz",
+    "bounty_hunter_space_guild",
+    "entrance",
+    "tiny_colony"
+  ]
+}
