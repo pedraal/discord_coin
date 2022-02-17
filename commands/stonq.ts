@@ -1,6 +1,9 @@
 import { CoinMarketCapApi } from "../apis/coinmarketcap_api.ts";
 import { MagicEdenApi } from "../apis/magic_eden_api.ts";
 
+const cmcApi = await CoinMarketCapApi.init();
+const meApi = await MagicEdenApi.init();
+
 export class StonqCommand {
   interaction: any;
   constructor(interaction: any) {
@@ -12,9 +15,7 @@ export class StonqCommand {
     if (subCommandGroup?.name === "coin") {
       return {
         type: 4,
-        data: {
-          content: await this.coinCommand(subCommandGroup.options[0]),
-        },
+        data: await this.coinCommand(subCommandGroup.options[0]),
       };
     } else if (subCommandGroup?.name === "nft") {
       return {
@@ -27,8 +28,6 @@ export class StonqCommand {
   }
 
   async coinCommand(subCommand: any) {
-    const cmcApi = await CoinMarketCapApi.init();
-
     if (subCommand.name === "all") {
       return await cmcApi.discordTable(subCommand.options);
     } else if (subCommand.name === "one") {
@@ -39,8 +38,6 @@ export class StonqCommand {
   }
 
   async nftCommand(subCommand: any) {
-    const meApi = await MagicEdenApi.init();
-
     if (subCommand.name === "all") {
       return await meApi.discordTable();
     } else if (subCommand.name === "one") {
