@@ -1,5 +1,8 @@
 import all from "https://deno.land/x/promise_fns/src/all.ts";
 import { AsciiAlign, AsciiTable } from "../deps.ts";
+import { AirtableApi } from "./airtable_api.ts";
+
+const airtableApi = new AirtableApi();
 
 const magic_eden_base_url =
   "https://api-mainnet.magiceden.io/rpc/getCollectionEscrowStats/";
@@ -7,50 +10,49 @@ const magic_eden_base_url =
 export class MagicEdenApi {
   nftSymbols: string[];
 
+  static async init() {
+    const nfts = await this.#fetchConfig();
+    return new MagicEdenApi(nfts);
+  }
+
   constructor(
-    nftSymbols: string[] = [
-      "enviro",
-      "metavillage",
-      "the_tower",
-      "solsteads_surreal_estate",
-      "cryptocribs",
-      "neonexus_residential",
-      "neonexus_commercial",
-      "sovana",
-      "portals",
-      "nftabs",
-      "monsterz",
-      "spookyz",
-      "bounty_hunter_space_guild",
-      "entrance",
-      "tiny_colony"
-    ],
+    nftSymbols: string[],
   ) {
     this.nftSymbols = nftSymbols;
   }
 
-  async nftsTable() {
-    const ress = await all(
-      this.nftSymbols.map((symbol) => fetch(magic_eden_base_url + symbol)),
+  async fetchNfts(symbols: string[]) {
+    const responses = await all(
+      symbols.map((symbol) => fetch(magic_eden_base_url + symbol)),
     );
-    let datas = await all(ress.map((res) => res.json()));
-    datas = datas.map((d) => {
+    let nfts = await all(responses.map((res) => res.json()));
+    nfts = nfts.map((d) => {
       return {
         symbol: d.results.symbol,
         floor: this.formatedPrice(d.results.floorPrice),
+        listed: d.results.listedCount,
+        vat: this.formatedPrice(d.results.volumeAll),
+        v24h: this.formatedPrice(d.results.volume24hr),
+        avg: this.formatedPrice(d.results.avgPrice24hr),
       };
     });
 
-    datas = datas.sort(function (a, b) {
+    nfts = nfts.sort(function (a, b) {
       return b.floor - a.floor;
     });
+
+    return nfts;
+  }
+
+  async discordTable() {
+    const nfts = await this.fetchNfts(this.nftSymbols);
 
     const table = new AsciiTable("NFT");
     table
       .setHeading("Name", "◎");
 
-    datas.forEach((d) => {
-      table.addRow(d.symbol, d.floor);
+    nfts.forEach((nft) => {
+      table.addRow(nft.symbol, nft.floor);
     });
 
     return {
@@ -58,30 +60,17 @@ export class MagicEdenApi {
     };
   }
 
-  async nftDetails(options: any) {
+  async discordDetails(options: any) {
     const symbol = options.find((o: any) => o.name === "name");
-    const res = await fetch(magic_eden_base_url + symbol.value);
-    const { results: data } = await res.json();
+    const nft = (await this.fetchNfts([symbol.value]))[0];
 
     const table = new AsciiTable(symbol.value);
     table
-      .addRow(
-        "Floor",
-        this.formatedPrice(data.floorPrice),
-      )
-      .addRow(
-        "Listed",
-        data.listedCount,
-      )
-      .addRow(
-        "VAT",
-        this.formatedPrice(data.volumeAll),
-      )
-      .addRow(
-        "V24h",
-        this.formatedPrice(data.volume24hr),
-      )
-      .addRow("Avg.", this.formatedPrice(data.avgPrice24hr))
+      .addRow("Floor", nft.floor)
+      .addRow("Listed", nft.listed)
+      .addRow("VAT", nft.vat)
+      .addRow("V24h", nft.v24h)
+      .addRow("Avg.", nft.avg)
       .setAlign(1, AsciiAlign.RIGHT);
 
     const content = "```\n" +
@@ -97,7 +86,7 @@ export class MagicEdenApi {
             "type": 2,
             "label": "MagicEden",
             "style": 5,
-            "url": `https://magiceden.io/marketplace/${data.symbol}`,
+            "url": `https://magiceden.io/marketplace/${nft.symbol}`,
           },
         ],
       }],
@@ -107,5 +96,16 @@ export class MagicEdenApi {
   formatedPrice(floorValue: number) {
     return (Math.floor(floorValue * 0.000000001 * 100) / 100)
       .toFixed(2);
+  }
+
+  static async #fetchConfig() {
+    if (Deno.env.get("AIRTABLE_API_KEY")) {
+      return await airtableApi.fetchNfts();
+    } else {
+      const config = await Deno.readTextFile(
+        Deno.env.get("CONFIG_PATH") || "./config.json",
+      );
+      return JSON.parse(config).nfts;
+    }
   }
 }

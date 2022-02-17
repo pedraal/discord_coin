@@ -1,0 +1,13 @@
+{
+  "coins": {
+    "fiat": "USD",
+    "symbols": [
+      "BTC",
+      "ETH"
+    ]
+  },
+  "nfts": [
+    "enviro",
+    "cryptocribs"
+  ]
+}

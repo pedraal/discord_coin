@@ -1,4 +1,15 @@
 import { AsciiTable } from "../deps.ts";
+import { AirtableApi } from "./airtable_api.ts";
+
+const airtableApi = new AirtableApi();
+export type Coin = {
+  symbol: string;
+  price: number;
+  hour: number;
+  day: number;
+  week: number;
+  month: number;
+};
 
 export interface CoinMarketCapApiOptions {
   fiat: string;
@@ -18,25 +29,12 @@ export class CoinMarketCapApi {
     headers: { "Content-Type": string; "X-CMC_PRO_API_KEY": string };
   };
 
-  constructor(
-    options: CoinMarketCapApiOptions = {
-      fiat: "USD",
-      symbols: [
-        "BTC",
-        "ETH",
-        "ADA",
-        "SOL",
-        "BNB",
-        "CAKE",
-        "DOT",
-        "KCS",
-        "MATIC",
-        "CRO",
-        "AVAX",
-        "FLUX",
-      ],
-    },
-  ) {
+  static async init() {
+    const config = await this.#fetchConfig();
+    return new CoinMarketCapApi(config);
+  }
+
+  constructor(options: CoinMarketCapApiOptions) {
     this.options = options;
 
     this.memes = {
@@ -57,145 +55,80 @@ export class CoinMarketCapApi {
     };
   }
 
-  async call(options?: { short?: boolean; meme?: string }) {
-    // deno-lint-ignore no-explicit-any
-    const results: any = {};
-    for await (const convert of this.options.fiat) {
-      const symbolsString = options?.meme
-        ? options.meme
-        : this.options.symbols.join(",");
-      const url =
-        `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${symbolsString}&convert=${convert}`;
-      const req = await fetch(url, this.apiOptions);
-      const coins = (await req.json()).data;
-      const coinsKeys = Object.keys(coins);
-
-      coinsKeys.forEach((key) => {
-        const coin = coins[key];
-        if (results[key]) {
-          results[key].quote = { ...results[key].quote, ...coin.quote };
-        } else {
-          results[key] = {
-            name: coin.name,
-            symbol: coin.symbol,
-            quote: coin.quote,
-          };
-        }
-      });
-    }
-
-    const coinsKeys = Object.keys(results);
-
-    let content;
-    if (options?.meme) {
-      content = `${
-        this.title(options.meme, results[options.meme].quote.USD)
-      } | ${
-        this.truncate(
-          results[options.meme].quote.USD[
-            options.short ? "percent_change_1h" : "percent_change_24h"
-          ],
-        )
-      }% en ${options.short ? "1h" : "24h"}
-    ${this.pickMeme(results[options.meme], options.short)}`;
-    } else {
-      content = coinsKeys.map((c) => {
-        const coin = results[c];
-        const usdQuote = coin.quote.USD;
-
-        return `${this.title(c, usdQuote)} | H: ${
-          this.truncate(usdQuote.percent_change_1h)
-        }% ${this.growth(usdQuote.percent_change_1h)} | J: ${
-          this.truncate(usdQuote.percent_change_24h)
-        }% ${this.growth(usdQuote.percent_change_24h)} | S: ${
-          this.truncate(usdQuote.percent_change_7d)
-        }% ${this.growth(usdQuote.percent_change_7d)} | M: ${
-          this.truncate(usdQuote.percent_change_30d)
-        }% ${this.growth(usdQuote.percent_change_30d)}`;
-      }).join("\n\n");
-    }
-
-    return content;
-  }
-
-  async coinsTable(options: any) {
-    const fullOption = options.find((o: any) => o.name === "full");
+  async fetchCoins(symbols: string[]) {
     const url =
       `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${
-        this.options.symbols.join(",")
+        symbols.join(",")
       }&convert=${this.options.fiat}`;
     const res = await fetch(url, this.apiOptions);
     const coins = (await res.json()).data;
 
     const coinsValues = Object.values(coins);
 
+    const serializedCoins: Coin[] = coinsValues.map((coin: any) => {
+      return {
+        symbol: coin.symbol,
+        price: this.truncate(coin.quote.USD.price),
+        hour: this.truncate(coin.quote.USD.percent_change_1h),
+        day: this.truncate(coin.quote.USD.percent_change_24h),
+        week: this.truncate(coin.quote.USD.percent_change_7d),
+        month: this.truncate(coin.quote.USD.percent_change_30d),
+      };
+    });
+    return serializedCoins;
+  }
+
+  async discordTable(options: any) {
+    const fullOption = options.find((o: any) => o.name === "full");
+    const coins = await this.fetchCoins(this.options.symbols);
+
     const table = new AsciiTable("Coins");
 
     if (fullOption) {
       table
-        .setHeading("Symbol", "Price", "H", "J", "S", "M");
+        .setHeading("Symbol", "Price", "H", "J", "W", "M");
     } else {
       table
         .setHeading("Symbol", "Price", "H", "J");
     }
 
-    coinsValues.sort((a: any, b: any) => {
-      return b.quote.USD.price - a.quote.USD.price;
-    }).forEach((c: any) => {
-      const row = [
-        c.symbol,
-        this.truncate(c.quote.USD.price),
-        this.truncate(c.quote.USD.percent_change_1h),
-        this.truncate(c.quote.USD.percent_change_24h),
-      ];
-
+    coins.sort((a: any, b: any) => {
+      return b.price - a.price;
+    }).forEach((c) => {
+      const row = [c.symbol, c.price, c.hour, c.day];
       if (fullOption) {
-        row.push(
-          this.truncate(c.quote.USD.percent_change_7d),
-          this.truncate(c.quote.USD.percent_change_30d),
-        );
+        row.push(c.week, c.month);
       }
       table.addRow(row);
     });
 
-    return "```\n" + table.toString() + "\n```";
+    return { content: "```\n" + table.toString() + "\n```" };
   }
 
-  async coinDetails(options: any) {
-    const symbol = options.find((o: any) => o.name === "symbol");
-    const short = options.find((o: any) => o.name === "short");
-    const url =
-      `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${symbol.value}&convert=${this.options.fiat}`;
+  async discordDetails(options: any) {
+    const symbol = options.find((o: { name: string; value: string }) =>
+      o.name === "symbol"
+    );
+    const short = options.find((o: { name: string; value: string }) =>
+      o.name === "short"
+    );
+    const coin = (await this.fetchCoins([symbol.value]))[0];
 
-    const res = await fetch(url, this.apiOptions);
-    const coins = (await res.json()).data;
-
-    const coinValues: any = Object.values(coins).shift();
-
-    return `${this.title(coinValues.symbol, coinValues.quote.USD)} | ${
-      this.truncate(
-        coinValues.quote.USD[
-          short?.value ? "percent_change_1h" : "percent_change_24h"
-        ],
-      )
-    }% en ${short?.value ? "1h" : "24h"}
-    ${this.pickMeme(coinValues, short?.value)}`;
+    return {
+      content: `${this.title(coin.symbol, coin.price)} | ${
+        short?.value ? coin.hour : coin.day
+      }% en ${short?.value ? "1h" : "24h"}
+    ${this.pickMeme(coin, short?.value)}`,
+    };
   }
 
   truncate(val: number) {
     return Math.round(val * 100) / 100;
   }
 
-  growth(val: number) {
-    if (val > 0) return "🟢";
-    else return "🔴";
-  }
-
   // deno-lint-ignore no-explicit-any
   pickMeme(coin: any, short = false) {
-    const value = short
-      ? coin.quote.USD.percent_change_1h
-      : coin.quote.USD.percent_change_24h;
+    const value = short ? coin.hour : coin.day;
     if ((value * 100) >= (100 * 10)) {
       return this.memes.best;
     } else if ((value * 100) >= (100 * 3)) {
@@ -209,8 +142,23 @@ export class CoinMarketCapApi {
     }
   }
 
-  // deno-lint-ignore no-explicit-any
-  title(coin: string, quote: any) {
-    return `**${coin} :** *$${this.truncate(quote.price)}*`;
+  title(coin: string, price: number) {
+    return `**${coin} :** *$${price}*`;
+  }
+
+  static async #fetchConfig() {
+    if (Deno.env.get("AIRTABLE_API_KEY")) {
+      const coinList = await airtableApi.fetchCoins();
+
+      return {
+        fiat: "USD",
+        symbols: coinList,
+      };
+    } else {
+      const config = await Deno.readTextFile(
+        Deno.env.get("CONFIG_PATH") || "./config.json",
+      );
+      return JSON.parse(config).coins;
+    }
   }
 }
