@@ -148,7 +148,12 @@ export class CoinMarketCapApi {
 
   static async #fetchConfig() {
     if (Deno.env.get("AIRTABLE_API_KEY")) {
-      return await airtableApi.fetchNfts();
+      const coinList = await airtableApi.fetchCoins();
+
+      return {
+        fiat: "USD",
+        symbols: coinList,
+      };
     } else {
       const config = await Deno.readTextFile(
         Deno.env.get("CONFIG_PATH") || "./config.json",
