@@ -11,5 +11,6 @@ export {
 import nacl from "https://cdn.skypack.dev/tweetnacl@v1.0.3?dts";
 
 import AsciiTable, { AsciiAlign } from "https://deno.land/x/ascii_table/mod.ts";
+import all from "https://deno.land/x/promise_fns/src/all.ts";
 
-export { AsciiAlign, AsciiTable, nacl };
+export { all, AsciiAlign, AsciiTable, nacl };
