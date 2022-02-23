@@ -1,6 +1,6 @@
-import { Controller } from "Stimulus";
+import { Stimulus } from "../deps.js";
 
-export default class extends Controller {
+export default class extends Stimulus.Controller {
   static targets = ["loader"];
 
   connect() {

@@ -1,6 +1,6 @@
-import { Controller } from "Stimulus";
+import { Stimulus } from "../deps.js";
 
-export default class extends Controller {
+export default class extends Stimulus.Controller {
   static values = {
     headers: Array,
     rows: Array,
@@ -38,10 +38,7 @@ export default class extends Controller {
   }
 
   setSorting(event) {
-    const index = parseInt(
-      event.target.dataset.index ?? event.target.parentElement.dataset.index ??
-        event.target.parentElement.parentElement.dataset.index,
-    );
+    const index = parseInt(event.target.closest("[data-index]").dataset.index);
 
     if (this.sortedByValue !== index) {
       this.sortedDirValue = -1;
@@ -95,7 +92,7 @@ export default class extends Controller {
         "",
       );
 
-    return `<tr>${cols}</tr>`;
+    return `<tr class="${this.classes.tr}">${cols}</tr>`;
   }
 
   scoreClass(score) {
@@ -109,7 +106,8 @@ export default class extends Controller {
       table: "border-collapse rounded-lg table-auto bg-slate-800",
       th:
         "p-4 pl-8 text-lg font-medium text-left border-b text-slate-200 border-sky-600 cursor-pointer",
-      tbody: "overflow-hidden rounded-b-lg bg-slate-700",
+      tbody: "overflow-hidden rounded-b-lg",
+      tr: "odd:bg-slate-700 even:bg-slate-600",
       td:
         "p-4 pl-8 border-b first:font-semibold first:text-sky-400 text-slate-300 border-slate-600",
     };

@@ -1,8 +1,7 @@
-import { serve } from "./deps.ts";
+import { contentType, path, serve } from "./deps.ts";
 import { discordCommandsHandler } from "./services/discord_commands.ts";
 import { reportHandler } from "./services/report.ts";
-import { contentType } from "https://deno.land/x/media_types/mod.ts";
-import * as path from "https://deno.land/std/path/mod.ts";
+
 serve({
   "/discord": discordCommandsHandler,
   "/": handleStaticAsset,
