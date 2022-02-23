@@ -40,7 +40,6 @@ export class MagicEdenApi {
     nfts = nfts.sort(function (a, b) {
       return b.floor - a.floor;
     });
-
     return nfts;
   }
 

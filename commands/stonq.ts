@@ -71,6 +71,32 @@ export class StonqCommand {
               ],
             },
             {
+              "name": "add",
+              "description": "Add to tracked coins",
+              "type": 1,
+              "options": [
+                {
+                  "name": "symbol",
+                  "description": "Symbol of the target",
+                  "type": 3,
+                  "required": true,
+                },
+              ],
+            },
+            {
+              "name": "remove",
+              "description": "Remove from tracked coins",
+              "type": 1,
+              "options": [
+                {
+                  "name": "symbol",
+                  "description": "Symbol of the target",
+                  "type": 3,
+                  "required": true,
+                },
+              ],
+            },
+            {
               "name": "one",
               "description": "Get the value at 24h of target coin",
               "type": 1,
@@ -100,6 +126,32 @@ export class StonqCommand {
               "name": "all",
               "description": "Get the value of all tracked nfts",
               "type": 1,
+            },
+            {
+              "name": "add",
+              "description": "Add to tracked nfts",
+              "type": 1,
+              "options": [
+                {
+                  "name": "symbol",
+                  "description": "Symbol of the target",
+                  "type": 3,
+                  "required": true,
+                },
+              ],
+            },
+            {
+              "name": "remove",
+              "description": "Remove from tracked nfts",
+              "type": 1,
+              "options": [
+                {
+                  "name": "symbol",
+                  "description": "Symbol of the target",
+                  "type": 3,
+                  "required": true,
+                },
+              ],
             },
             {
               "name": "one",

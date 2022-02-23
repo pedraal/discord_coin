@@ -1,9 +1,10 @@
-import { serve } from "./deps.ts";
+import { serve, serveStatic } from "./deps.ts";
 import { discordCommandsHandler } from "./services/discord_commands.ts";
 import { reportHandler } from "./services/report.ts";
 
-// For all requests to "/" endpoint, we want to invoke action() handler.
 serve({
-  "/": discordCommandsHandler,
+  "/discord": discordCommandsHandler,
+  "/": serveStatic("public/index.html", { baseUrl: import.meta.url }),
   "/report": reportHandler,
+  "/:filename+": serveStatic("public", { baseUrl: import.meta.url }),
 });
