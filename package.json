@@ -1,0 +1,11 @@
+{
+  "name": "stonks_deno_bot",
+  "version": "1.0.0",
+  "description": "SHOULD BE USED FOR DEVELOPMENT TOOLING ONLY",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.0.23"
+  }
+}
