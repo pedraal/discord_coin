@@ -9,7 +9,7 @@ export default class extends Controller {
   }
 
   async fetch() {
-    const req = await fetch("/report");
+    const req = await fetch("/api");
     this.apiData = await req.json();
 
     if (this.hasLoaderTarget) this.loaderTarget.remove();
