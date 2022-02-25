@@ -21,13 +21,27 @@ export default class extends Stimulus.Controller {
 
     dataKeys.forEach((key) => {
       const set = this.apiData[key];
-      document.querySelector(`#${key}[data-controller="table"]`)
+
+      const table = document.querySelector(`#${key}`);
+      table
+        .dataset.tableHeadersUnitsValue = JSON.stringify(
+          this.headersUnits[key],
+        );
+
+      table
         .dataset.tableHeadersValue = JSON.stringify(Object.keys(set[0]));
 
-      document.querySelector(`#${key}[data-controller="table"]`)
+      table
         .dataset.tableRowsValue = JSON.stringify(
           set.map((item) => Object.values(item)),
         );
     });
+  }
+
+  get headersUnits() {
+    return {
+      coins: ["", "$", "%", "%", "%", "%"],
+      nfts: ["", "⌾", "", "", "⌾", "⌾", "⌾", "⌾"],
+    };
   }
 }

@@ -5,14 +5,14 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StonqReport</title>
+  <title>WouatZeuStonq</title>
   <link rel="stylesheet" href="/dist/main.css">
 </head>
 
 <body class="w-screen overflow-x-hidden bg-slate-900">
   <div
     class="sticky top-0 z-40 w-full backdrop-blur flex-none transition-colors duration-500 lg:z-50 border-b border-slate-50/[0.06] supports-backdrop-blur:bg-white/60 bg-transparent px-6 py-3">
-    <h1 class="text-4xl font-bold text-sky-600">StonqReport</h1>
+    <h1 class="text-4xl font-bold text-sky-500">WouatZeuStonq</h1>
   </div>
   <div data-controller="fetcher" class="flex flex-wrap items-start w-full m-4 text-white">
     <p class="flex items-center -mr-2" data-fetcher-target="loader">
@@ -30,8 +30,10 @@
     <div id="nfts" class="p-2" data-controller="table" data-table-sorted-by-value="1" data-table-sorted-dir-value="-1">
     </div>
 
-    <div id="coins" class="p-2" data-controller="table" data-table-score-highlight-columns-value="[2,3,4,5]"
-      data-table-sorted-by-value="1" data-table-sorted-dir-value="-1"></div>
+    <div id="coins" class="p-2" data-controller="table table-score-highlighter"
+      data-table-scorable-columns-value="[2, 3, 4, 5]" data-table-heads data-table-sorted-by-value="1"
+      data-table-sorted-dir-value="-1">
+    </div>
   </div>
   </div>
 
