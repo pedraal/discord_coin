@@ -1,6 +1,0 @@
-// ONLY FOR IDE AUTO-COMPLETE
-{
-  "imports": {
-    "Stimulus": "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
-  }
-}

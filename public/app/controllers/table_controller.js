@@ -1,19 +1,17 @@
-import { Controller } from "Stimulus";
+import { Stimulus } from "../deps.js";
 
-export default class extends Controller {
+export default class extends Stimulus.Controller {
   static values = {
     headers: Array,
+    headersUnits: Array,
     rows: Array,
-    scoreHighlightColumns: Array,
     sortedBy: Number,
     sortedDir: Number,
+    scorableColumns: Array,
   };
 
   connect() {
-    this.renderTable();
-  }
-
-  headersValueChanged() {
+    this.#sort();
     this.renderTable();
   }
 
@@ -38,10 +36,7 @@ export default class extends Controller {
   }
 
   setSorting(event) {
-    const index = parseInt(
-      event.target.dataset.index ?? event.target.parentElement.dataset.index ??
-        event.target.parentElement.parentElement.dataset.index,
-    );
+    const index = parseInt(event.target.closest("[data-index]").dataset.index);
 
     if (this.sortedByValue !== index) {
       this.sortedDirValue = -1;
@@ -66,9 +61,15 @@ export default class extends Controller {
         ? (this.sortedDirValue > 0 ? this.arrowUp : this.arrowDown)
         : "";
 
-      return `<th class="${this.classes.th}" data-action="click->table#setSorting" data-index="${index}">
+      const unit = this.headersUnitsValue[index]
+        ? `( ${this.headersUnitsValue[index]} )`
+        : "";
+
+      return `
+      <th class="${this.classes.th}" data-action="click->table#setSorting" data-index="${index}">
         <span class="flex items-center">
-          <span class="mr-3 first-letter:uppercase">${header}</span>
+          <span class="first-letter:uppercase">${header}</span>
+          <span class="text-xs ml-1 mr-3">${unit}</span>
           <span>${sorting}</span>
         </span>
       </th>`;
@@ -85,23 +86,13 @@ export default class extends Controller {
 
   renderRow(row = []) {
     const cols = row.map((col, index) => {
-      return `<td class="${this.classes.td} ${
-        this.scoreHighlightColumnsValue.includes(index)
-          ? this.scoreClass(col)
-          : ""
-      }">${col}</td>`;
-    })
-      .join(
-        "",
-      );
+      const extraClass = this.scorableColumnsValue.includes(index)
+        ? this.scoreClass(parseFloat(col))
+        : "";
+      return `<td class="${this.classes.td} ${extraClass}">${col} <span class="unit"></span></td>`;
+    }).join("");
 
-    return `<tr>${cols}</tr>`;
-  }
-
-  scoreClass(score) {
-    if (score > 1) return "!text-green-500";
-    else if (score > -1) return "!text-yellow-500";
-    else return "!text-red-500";
+    return `<tr class="${this.classes.tr}">${cols}</tr>`;
   }
 
   get classes() {
@@ -109,7 +100,8 @@ export default class extends Controller {
       table: "border-collapse rounded-lg table-auto bg-slate-800",
       th:
         "p-4 pl-8 text-lg font-medium text-left border-b text-slate-200 border-sky-600 cursor-pointer",
-      tbody: "overflow-hidden rounded-b-lg bg-slate-700",
+      tbody: "overflow-hidden rounded-b-lg",
+      tr: "odd:bg-slate-700 even:bg-slate-600",
       td:
         "p-4 pl-8 border-b first:font-semibold first:text-sky-400 text-slate-300 border-slate-600",
     };
@@ -127,5 +119,11 @@ export default class extends Controller {
     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
     </svg>`;
+  }
+
+  scoreClass(score) {
+    if (score > 1) return "!text-green-500";
+    else if (score > -1) return "!text-yellow-500";
+    else return "!text-red-500";
   }
 }
