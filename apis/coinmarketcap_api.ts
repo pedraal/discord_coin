@@ -58,7 +58,9 @@ export class CoinMarketCapApi {
   async fetchCoins(symbols: string[]) {
     const url =
       `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${
-        symbols.join(",")
+        symbols.join(
+          ",",
+        )
       }&convert=${this.options.fiat}`;
     const res = await fetch(url, this.apiOptions);
     const coins = (await res.json()).data;
@@ -85,32 +87,32 @@ export class CoinMarketCapApi {
     const table = new AsciiTable("Coins");
 
     if (fullOption) {
-      table
-        .setHeading("Symbol", "Price", "H", "J", "W", "M");
+      table.setHeading("Symbol", "Price", "H", "J", "W", "M");
     } else {
-      table
-        .setHeading("Symbol", "Price", "H", "J");
+      table.setHeading("Symbol", "Price", "H", "J");
     }
 
-    coins.sort((a: any, b: any) => {
-      return b.price - a.price;
-    }).forEach((c) => {
-      const row = [c.symbol, c.price, c.hour, c.day];
-      if (fullOption) {
-        row.push(c.week, c.month);
-      }
-      table.addRow(row);
-    });
+    coins
+      .sort((a: any, b: any) => {
+        return b.price - a.price;
+      })
+      .forEach((c) => {
+        const row = [c.symbol, c.price, c.hour, c.day];
+        if (fullOption) {
+          row.push(c.week, c.month);
+        }
+        table.addRow(row);
+      });
 
     return { content: "```\n" + table.toString() + "\n```" };
   }
 
   async discordDetails(options: any) {
-    const symbol = options.find((o: { name: string; value: string }) =>
-      o.name === "symbol"
+    const symbol = options.find(
+      (o: { name: string; value: string }) => o.name === "symbol",
     );
-    const short = options.find((o: { name: string; value: string }) =>
-      o.name === "short"
+    const short = options.find(
+      (o: { name: string; value: string }) => o.name === "short",
     );
     const coin = (await this.fetchCoins([symbol.value]))[0];
 
@@ -129,13 +131,13 @@ export class CoinMarketCapApi {
   // deno-lint-ignore no-explicit-any
   pickMeme(coin: any, short = false) {
     const value = short ? coin.hour : coin.day;
-    if ((value * 100) >= (100 * 10)) {
+    if (value * 100 >= 100 * 10) {
       return this.memes.best;
-    } else if ((value * 100) >= (100 * 3)) {
+    } else if (value * 100 >= 100 * 3) {
       return this.memes.good;
-    } else if ((value * 100) >= (100 * -3)) {
+    } else if (value * 100 >= 100 * -3) {
       return this.memes.neutral;
-    } else if ((value * 100) >= (100 * -10)) {
+    } else if (value * 100 >= 100 * -10) {
       return this.memes.bad;
     } else {
       return this.memes.worst;

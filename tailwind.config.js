@@ -3,7 +3,5 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [
-    require("tailwindcss-debug-screens"),
-  ],
+  plugins: [require("tailwindcss-debug-screens")],
 };

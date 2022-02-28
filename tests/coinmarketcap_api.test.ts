@@ -33,10 +33,12 @@ Deno.test("CoinMarketCapApi", async (test) => {
   });
 
   await test.step(".discordTable", async () => {
-    const discordResponse = await cmcApi.discordTable([{
-      name: "full",
-      value: true,
-    }]);
+    const discordResponse = await cmcApi.discordTable([
+      {
+        name: "full",
+        value: true,
+      },
+    ]);
     const shouldIncludes = [
       "```",
       "------",
@@ -56,16 +58,14 @@ Deno.test("CoinMarketCapApi", async (test) => {
   });
 
   await test.step(".discordDetails", async () => {
-    const discordResponse = await cmcApi.discordDetails([{
-      name: "symbol",
-      value: "BTC",
-    }]);
+    const discordResponse = await cmcApi.discordDetails([
+      {
+        name: "symbol",
+        value: "BTC",
+      },
+    ]);
 
-    const shouldIncludes = [
-      "**BTC :**",
-      " en 24h",
-      " https://tenor.com/view/",
-    ];
+    const shouldIncludes = ["**BTC :**", " en 24h", " https://tenor.com/view/"];
 
     for (const shouldInclude of shouldIncludes) {
       assertStringIncludes(discordResponse.content, shouldInclude);

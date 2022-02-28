@@ -2,5 +2,11 @@
   "deno.enable": true,
   "deno.lint": true,
   "deno.unstable": true,
-  "editor.defaultFormatter": "denoland.vscode-deno"
+  "editor.defaultFormatter": "denoland.vscode-deno",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

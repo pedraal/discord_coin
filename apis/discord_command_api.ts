@@ -28,33 +28,27 @@ export class DiscordCommandApi {
 
     this.requestHeaders = {
       "Content-Type": "application/json",
-      "Authorization": `Bot ${this.BOT_TOKEN}`,
+      Authorization: `Bot ${this.BOT_TOKEN}`,
     };
     this.baseURL =
       `https://discord.com/api/v8/applications/${this.CLIENT_ID}/commands`;
   }
 
   async get() {
-    const req = await fetch(
-      this.baseURL,
-      {
-        method: "GET",
-        headers: this.requestHeaders,
-      },
-    );
+    const req = await fetch(this.baseURL, {
+      method: "GET",
+      headers: this.requestHeaders,
+    });
 
     return await req.json();
   }
 
   async create() {
-    const req = await fetch(
-      this.baseURL,
-      {
-        method: "POST",
-        headers: this.requestHeaders,
-        body: JSON.stringify(this.commandBody),
-      },
-    );
+    const req = await fetch(this.baseURL, {
+      method: "POST",
+      headers: this.requestHeaders,
+      body: JSON.stringify(this.commandBody),
+    });
 
     const json = await req.json();
 
@@ -62,26 +56,20 @@ export class DiscordCommandApi {
   }
 
   async update(id: string) {
-    const req = await fetch(
-      this.baseURL + `/${id}`,
-      {
-        method: "PATCH",
-        headers: this.requestHeaders,
-        body: JSON.stringify(this.commandBody),
-      },
-    );
+    const req = await fetch(this.baseURL + `/${id}`, {
+      method: "PATCH",
+      headers: this.requestHeaders,
+      body: JSON.stringify(this.commandBody),
+    });
     const json = await req.json();
 
     return json;
   }
 
   async delete(id: string) {
-    await fetch(
-      this.baseURL + `/${id}`,
-      {
-        method: "DELETE",
-        headers: this.requestHeaders,
-      },
-    );
+    await fetch(this.baseURL + `/${id}`, {
+      method: "DELETE",
+      headers: this.requestHeaders,
+    });
   }
 }

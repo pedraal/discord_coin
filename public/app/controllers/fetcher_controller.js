@@ -23,18 +23,15 @@ export default class extends Stimulus.Controller {
       const set = this.apiData[key];
 
       const table = document.querySelector(`#${key}`);
-      table
-        .dataset.tableHeadersUnitsValue = JSON.stringify(
-          this.headersUnits[key],
-        );
+      table.dataset.tableHeadersUnitsValue = JSON.stringify(
+        this.headersUnits[key]
+      );
 
-      table
-        .dataset.tableHeadersValue = JSON.stringify(Object.keys(set[0]));
+      table.dataset.tableHeadersValue = JSON.stringify(Object.keys(set[0]));
 
-      table
-        .dataset.tableRowsValue = JSON.stringify(
-          set.map((item) => Object.values(item)),
-        );
+      table.dataset.tableRowsValue = JSON.stringify(
+        set.map((item) => Object.values(item))
+      );
     });
   }
 

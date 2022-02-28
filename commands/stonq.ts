@@ -49,120 +49,120 @@ export class StonqCommand {
 
   static definition() {
     return {
-      "name": "stonq",
-      "description": "Wouat stonqse ?",
-      "options": [
+      name: "stonq",
+      description: "Wouat stonqse ?",
+      options: [
         {
-          "name": "coin",
-          "description": "Get the value of one coin or tracked coins",
-          "type": 2,
-          "options": [
+          name: "coin",
+          description: "Get the value of one coin or tracked coins",
+          type: 2,
+          options: [
             {
-              "name": "all",
-              "description": "Get the value of all tracked coins",
-              "type": 1,
-              "options": [
+              name: "all",
+              description: "Get the value of all tracked coins",
+              type: 1,
+              options: [
                 {
-                  "name": "full",
-                  "description": "Also display 7d and 30d values",
-                  "type": 5,
-                  "required": false,
+                  name: "full",
+                  description: "Also display 7d and 30d values",
+                  type: 5,
+                  required: false,
                 },
               ],
             },
             {
-              "name": "add",
-              "description": "Add to tracked coins",
-              "type": 1,
-              "options": [
+              name: "add",
+              description: "Add to tracked coins",
+              type: 1,
+              options: [
                 {
-                  "name": "symbol",
-                  "description": "Symbol of the target",
-                  "type": 3,
-                  "required": true,
+                  name: "symbol",
+                  description: "Symbol of the target",
+                  type: 3,
+                  required: true,
                 },
               ],
             },
             {
-              "name": "remove",
-              "description": "Remove from tracked coins",
-              "type": 1,
-              "options": [
+              name: "remove",
+              description: "Remove from tracked coins",
+              type: 1,
+              options: [
                 {
-                  "name": "symbol",
-                  "description": "Symbol of the target",
-                  "type": 3,
-                  "required": true,
+                  name: "symbol",
+                  description: "Symbol of the target",
+                  type: 3,
+                  required: true,
                 },
               ],
             },
             {
-              "name": "one",
-              "description": "Get the value at 24h of target coin",
-              "type": 1,
-              "options": [
+              name: "one",
+              description: "Get the value at 24h of target coin",
+              type: 1,
+              options: [
                 {
-                  "name": "symbol",
-                  "description": "Symbol of the target",
-                  "type": 3,
-                  "required": true,
+                  name: "symbol",
+                  description: "Symbol of the target",
+                  type: 3,
+                  required: true,
                 },
                 {
-                  "name": "short",
-                  "description": "Show values for 1h",
-                  "type": 5,
-                  "required": false,
+                  name: "short",
+                  description: "Show values for 1h",
+                  type: 5,
+                  required: false,
                 },
               ],
             },
           ],
         },
         {
-          "name": "nft",
-          "description": "Get the FP of one nft or tracked nfts",
-          "type": 2,
-          "options": [
+          name: "nft",
+          description: "Get the FP of one nft or tracked nfts",
+          type: 2,
+          options: [
             {
-              "name": "all",
-              "description": "Get the value of all tracked nfts",
-              "type": 1,
+              name: "all",
+              description: "Get the value of all tracked nfts",
+              type: 1,
             },
             {
-              "name": "add",
-              "description": "Add to tracked nfts",
-              "type": 1,
-              "options": [
+              name: "add",
+              description: "Add to tracked nfts",
+              type: 1,
+              options: [
                 {
-                  "name": "symbol",
-                  "description": "Symbol of the target",
-                  "type": 3,
-                  "required": true,
+                  name: "symbol",
+                  description: "Symbol of the target",
+                  type: 3,
+                  required: true,
                 },
               ],
             },
             {
-              "name": "remove",
-              "description": "Remove from tracked nfts",
-              "type": 1,
-              "options": [
+              name: "remove",
+              description: "Remove from tracked nfts",
+              type: 1,
+              options: [
                 {
-                  "name": "symbol",
-                  "description": "Symbol of the target",
-                  "type": 3,
-                  "required": true,
+                  name: "symbol",
+                  description: "Symbol of the target",
+                  type: 3,
+                  required: true,
                 },
               ],
             },
             {
-              "name": "one",
-              "description": "Get the value at 24h of target nft",
-              "type": 1,
-              "options": [
+              name: "one",
+              description: "Get the value at 24h of target nft",
+              type: 1,
+              options: [
                 {
-                  "name": "name",
-                  "description": "Name of the target",
-                  "type": 3,
-                  "required": true,
+                  name: "name",
+                  description: "Name of the target",
+                  type: 3,
+                  required: true,
                 },
               ],
             },
