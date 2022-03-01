@@ -15,9 +15,7 @@ export class MagicEdenApi {
     return new MagicEdenApi(nfts);
   }
 
-  constructor(
-    nftSymbols: string[],
-  ) {
+  constructor(nftSymbols: string[]) {
     this.nftSymbols = nftSymbols;
   }
 
@@ -47,8 +45,7 @@ export class MagicEdenApi {
     const nfts = await this.fetchNfts(this.nftSymbols);
 
     const table = new AsciiTable("NFT");
-    table
-      .setHeading("Name", "◎");
+    table.setHeading("Name", "◎");
 
     nfts.forEach((nft) => {
       table.addRow(nft.symbol, nft.floor);
@@ -72,29 +69,28 @@ export class MagicEdenApi {
       .addRow("Avg.", nft.avg)
       .setAlign(1, AsciiAlign.RIGHT);
 
-    const content = "```\n" +
-      table.toString() +
-      "\n```";
+    const content = "```\n" + table.toString() + "\n```";
 
     return {
       content,
-      components: [{
-        "type": 1,
-        "components": [
-          {
-            "type": 2,
-            "label": "MagicEden",
-            "style": 5,
-            "url": `https://magiceden.io/marketplace/${nft.symbol}`,
-          },
-        ],
-      }],
+      components: [
+        {
+          type: 1,
+          components: [
+            {
+              type: 2,
+              label: "MagicEden",
+              style: 5,
+              url: `https://magiceden.io/marketplace/${nft.symbol}`,
+            },
+          ],
+        },
+      ],
     };
   }
 
   formatedPrice(floorValue: number) {
-    return (Math.floor(floorValue * 0.000000001 * 100) / 100)
-      .toFixed(2);
+    return (Math.floor(floorValue * 0.000000001 * 100) / 100).toFixed(2);
   }
 
   static async #fetchConfig() {

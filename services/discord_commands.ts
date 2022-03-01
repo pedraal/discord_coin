@@ -1,8 +1,12 @@
 import { json, nacl, validateRequest } from "../deps.ts";
 import { StonqCommand } from "../commands/stonq.ts";
+import { CoinCommand } from "../commands/coin.ts";
+import { NftCommand } from "../commands/nft.ts";
 
 const commands = [
   { name: "stonq", class: StonqCommand },
+  { name: "coin", class: CoinCommand },
+  { name: "nft", class: NftCommand },
 ];
 
 export async function discordCommandsHandler(request: Request) {
@@ -79,7 +83,5 @@ async function verifySignature(
 
 /** Converts a hexadecimal string to Uint8Array. */
 function hexToUint8Array(hex: string) {
-  return new Uint8Array(
-    hex.match(/.{1,2}/g)!.map((val) => parseInt(val, 16)),
-  );
+  return new Uint8Array(hex.match(/.{1,2}/g)!.map((val) => parseInt(val, 16)));
 }

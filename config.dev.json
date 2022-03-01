@@ -1,13 +1,7 @@
 {
   "coins": {
     "fiat": "USD",
-    "symbols": [
-      "BTC",
-      "ETH"
-    ]
+    "symbols": ["BTC", "ETH"]
   },
-  "nfts": [
-    "enviro",
-    "cryptocribs"
-  ]
+  "nfts": ["enviro", "cryptocribs"]
 }

@@ -1,6 +1,5 @@
 export class AirtableApi {
-  constructor() {
-  }
+  constructor() {}
 
   async fetchCoins() {
     return await this.#fetchTable("coins");
