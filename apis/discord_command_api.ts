@@ -1,7 +1,11 @@
 import { StonqCommand } from "../commands/stonq.ts";
+import { CoinCommand } from "../commands/coin.ts";
+import { NftCommand } from "../commands/nft.ts";
 
 const definitions = {
   stonq: StonqCommand.definition(),
+  coin: CoinCommand.definition(),
+  nft: NftCommand.definition(),
 };
 
 export class DiscordCommandApi {

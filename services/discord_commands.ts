@@ -1,7 +1,13 @@
 import { json, nacl, validateRequest } from "../deps.ts";
 import { StonqCommand } from "../commands/stonq.ts";
+import { CoinCommand } from "../commands/coin.ts";
+import { NftCommand } from "../commands/nft.ts";
 
-const commands = [{ name: "stonq", class: StonqCommand }];
+const commands = [
+  { name: "stonq", class: StonqCommand },
+  { name: "coin", class: CoinCommand },
+  { name: "nft", class: NftCommand },
+];
 
 export async function discordCommandsHandler(request: Request) {
   // validateRequest() ensures that a request is of POST method and
