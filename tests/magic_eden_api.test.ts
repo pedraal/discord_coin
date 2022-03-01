@@ -42,10 +42,12 @@ Deno.test("MagicEdenApi", async (test) => {
   });
 
   await test.step(".discordDetails", async () => {
-    const discordResponse = await meApi.discordDetails([{
-      name: "name",
-      value: "enviro",
-    }]);
+    const discordResponse = await meApi.discordDetails([
+      {
+        name: "name",
+        value: "enviro",
+      },
+    ]);
     const shouldIncludes = [
       "```",
       "------",

@@ -11,6 +11,9 @@ export {
 // from Discord.
 import nacl from "https://cdn.skypack.dev/tweetnacl@v1.0.3?dts";
 
+export { contentType } from "https://deno.land/x/media_types/mod.ts";
+export * as path from "https://deno.land/std/path/mod.ts";
+
 import AsciiTable, { AsciiAlign } from "https://deno.land/x/ascii_table/mod.ts";
 import all from "https://deno.land/x/promise_fns/src/all.ts";
 

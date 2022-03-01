@@ -1,19 +1,17 @@
-import { Controller } from "Stimulus";
+import { Stimulus } from "../deps.js";
 
-export default class extends Controller {
+export default class extends Stimulus.Controller {
   static values = {
     headers: Array,
+    headersUnits: Array,
     rows: Array,
-    scoreHighlightColumns: Array,
     sortedBy: Number,
     sortedDir: Number,
+    scorableColumns: Array,
   };
 
   connect() {
-    this.renderTable();
-  }
-
-  headersValueChanged() {
+    this.#sort();
     this.renderTable();
   }
 
@@ -32,16 +30,14 @@ export default class extends Controller {
 
   #sort() {
     this.rowsValue = this.rowsValue.sort((a, b) => {
-      return (a[this.sortedByValue] - b[this.sortedByValue]) *
-        this.sortedDirValue;
+      return (
+        (a[this.sortedByValue] - b[this.sortedByValue]) * this.sortedDirValue
+      );
     });
   }
 
   setSorting(event) {
-    const index = parseInt(
-      event.target.dataset.index ?? event.target.parentElement.dataset.index ??
-        event.target.parentElement.parentElement.dataset.index,
-    );
+    const index = parseInt(event.target.closest("[data-index]").dataset.index);
 
     if (this.sortedByValue !== index) {
       this.sortedDirValue = -1;
@@ -54,65 +50,57 @@ export default class extends Controller {
   }
 
   renderTable() {
-    const table = `<table class="${this.classes.table}">${
+    const table = `<table class="border-collapse rounded-lg table-auto bg-slate-800">${
       this.renderHead() + this.renderRows()
     }</table>`;
     this.element.innerHTML = table;
   }
 
   renderHead() {
-    const heads = this.headersValue.map((header, index) => {
-      const sorting = index === this.sortedByValue
-        ? (this.sortedDirValue > 0 ? this.arrowUp : this.arrowDown)
-        : "";
+    const heads = this.headersValue
+      .map((header, index) => {
+        const sorting =
+          index === this.sortedByValue
+            ? this.sortedDirValue > 0
+              ? this.arrowUp
+              : this.arrowDown
+            : "";
 
-      return `<th class="${this.classes.th}" data-action="click->table#setSorting" data-index="${index}">
+        const unit = this.headersUnitsValue[index]
+          ? `( ${this.headersUnitsValue[index]} )`
+          : "";
+
+        return `
+      <th class="p-4 text-lg font-medium text-left border-b text-slate-200 border-sky-600 cursor-pointer pl-8" data-action="click->table#setSorting" data-index="${index}">
         <span class="flex items-center">
-          <span class="mr-3 first-letter:uppercase">${header}</span>
+          <span class="first-letter:uppercase">${header}</span>
+          <span class="text-xs ml-1 mr-3 whitespace-nowrap">${unit}</span>
           <span>${sorting}</span>
         </span>
       </th>`;
-    }).join("");
+      })
+      .join("");
 
     return `<thead><tr>${heads}</tr></thead>`;
   }
 
   renderRows() {
-    return `<tbody class="${this.classes.tbody}">${
-      this.rowsValue.map((r) => this.renderRow(r)).join("")
-    }</tbody>`;
+    return `<tbody class="overflow-hidden rounded-b-lg">${this.rowsValue
+      .map((r) => this.renderRow(r))
+      .join("")}</tbody>`;
   }
 
   renderRow(row = []) {
-    const cols = row.map((col, index) => {
-      return `<td class="${this.classes.td} ${
-        this.scoreHighlightColumnsValue.includes(index)
-          ? this.scoreClass(col)
-          : ""
-      }">${col}</td>`;
-    })
-      .join(
-        "",
-      );
+    const cols = row
+      .map((col, index) => {
+        const extraClass = this.scorableColumnsValue.includes(index)
+          ? this.scoreClass(parseFloat(col))
+          : "";
+        return `<td class="pl-8 p-4 first:font-semibold border-b first:text-sky-400 text-slate-300 border-slate-600 ${extraClass}">${col}</td>`;
+      })
+      .join("");
 
-    return `<tr>${cols}</tr>`;
-  }
-
-  scoreClass(score) {
-    if (score > 1) return "!text-green-500";
-    else if (score > -1) return "!text-yellow-500";
-    else return "!text-red-500";
-  }
-
-  get classes() {
-    return {
-      table: "border-collapse rounded-lg table-auto bg-slate-800",
-      th:
-        "p-4 pl-8 text-lg font-medium text-left border-b text-slate-200 border-sky-600 cursor-pointer",
-      tbody: "overflow-hidden rounded-b-lg bg-slate-700",
-      td:
-        "p-4 pl-8 border-b first:font-semibold first:text-sky-400 text-slate-300 border-slate-600",
-    };
+    return `<tr class="odd:bg-slate-700 even:bg-slate-600">${cols}</tr>`;
   }
 
   get arrowUp() {
@@ -127,5 +115,11 @@ export default class extends Controller {
     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
     </svg>`;
+  }
+
+  scoreClass(score) {
+    if (score > 1) return "!text-green-500";
+    else if (score > -1) return "!text-yellow-500";
+    else return "!text-red-500";
   }
 }

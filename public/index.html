@@ -1,48 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WouatStonqs ?</title>
+    <link rel="stylesheet" href="/dist/main.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StonqReport</title>
-  <link rel="stylesheet" href="/dist/main.css">
-  <script type="importmap">
-      {
-        "imports": {
-          "Stimulus": "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
-        }
-      }
-    </script>
-</head>
-
-<body class="w-screen overflow-x-hidden bg-slate-900">
-  <div
-    class="sticky top-0 z-40 w-full backdrop-blur flex-none transition-colors duration-500 lg:z-50 lg:border-b border-slate-50/[0.06] supports-backdrop-blur:bg-white/60 bg-transparent px-6 py-3">
-    <h1 class="text-4xl font-bold text-sky-600">StonqReport</h1>
-  </div>
-  <div data-controller="fetcher" class="flex flex-wrap items-start w-full m-4 text-white">
-    <p class="flex items-center -mr-2" data-fetcher-target="loader">
-      <svg class="w-8 h-8 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-        </path>
-      </svg>
-      <span class="ml-2">Récupération des coins et NFTs en cours</span>
-    </p>
-  </div>
-
-  <div class="flex flex-wrap m-2">
-    <div id="nfts" class="p-2" data-controller="table" data-table-sorted-by-value="1" data-table-sorted-dir-value="-1">
+  <body class="w-screen overflow-x-hidden bg-slate-900">
+    <div
+      class="supports-backdrop-blur:bg-white/60 sticky top-0 z-40 flex w-full flex-none items-center justify-between border-b border-slate-50/[0.06] bg-transparent px-6 py-3 backdrop-blur transition-colors duration-500 lg:z-50"
+    >
+      <h1 class="text-4xl font-bold text-sky-500">WouatStonqs ?</h1>
+      <p class="text-white">
+        Made with 🥖 &nbsp;by
+        <a class="underline" href="https://github.com/pedraal">Pedraal</a>
+      </p>
+    </div>
+    <div
+      data-controller="fetcher"
+      class="m-4 flex w-full flex-wrap items-start text-white"
+    >
+      <p class="-mr-2 flex items-center" data-fetcher-target="loader">
+        <svg
+          class="h-8 w-8 animate-spin"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <span class="ml-2">Récupération des coins et NFTs en cours</span>
+      </p>
     </div>
 
-    <div id="coins" class="p-2" data-controller="table" data-table-score-highlight-columns-value="[2,3,4,5]"
-      data-table-sorted-by-value="1" data-table-sorted-dir-value="-1"></div>
-  </div>
-  </div>
+    <div class="m-2 flex flex-wrap">
+      <div
+        id="nfts"
+        class="p-2"
+        data-controller="table"
+        data-table-sorted-by-value="1"
+        data-table-sorted-dir-value="-1"
+      ></div>
 
-  <script type="module" src="/app/index.js"></script>
-</body>
+      <div
+        id="coins"
+        class="p-2"
+        data-controller="table table-score-highlighter"
+        data-table-scorable-columns-value="[2, 3, 4, 5]"
+        data-table-heads
+        data-table-sorted-by-value="1"
+        data-table-sorted-dir-value="-1"
+      ></div>
+    </div>
 
+    <script type="module" src="/app/index.js"></script>
+  </body>
 </html>
