@@ -4,23 +4,33 @@ export default class extends Stimulus.Controller {
   static targets = ["loader"];
 
   connect() {
-    this.apiData = {};
     this.fetch();
   }
 
-  async fetch() {
-    const req = await fetch("/api");
-    this.apiData = await req.json();
-
-    if (this.hasLoaderTarget) this.loaderTarget.remove();
-    this.renderDataInTables();
+  fetch() {
+    fetch("/api/coin")
+      .then((data) => {
+        return data.json();
+      })
+      .then((data) => {
+        if (this.hasLoaderTarget) this.loaderTarget.remove();
+        this.renderDataInTables(data);
+      });
+    fetch("/api/nft")
+      .then((data) => {
+        return data.json();
+      })
+      .then((data) => {
+        if (this.hasLoaderTarget) this.loaderTarget.remove();
+        this.renderDataInTables(data);
+      });
   }
 
-  renderDataInTables() {
-    const dataKeys = Object.keys(this.apiData);
+  renderDataInTables(data) {
+    const dataKeys = Object.keys(data);
 
     dataKeys.forEach((key) => {
-      const set = this.apiData[key];
+      const set = data[key];
 
       const table = document.querySelector(`#${key}`);
       table.dataset.tableHeadersUnitsValue = JSON.stringify(

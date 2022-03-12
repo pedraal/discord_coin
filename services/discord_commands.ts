@@ -34,20 +34,20 @@ export async function discordCommandsHandler(request: Request) {
       );
     }
 
-    const { type = 0, data = { options: [] } } = JSON.parse(body);
-    if (type === 1) {
+    const parsedBody = JSON.parse(body);
+    if (parsedBody.type === 1) {
       // Discord performs Ping interactions to test our application.
       // Type 1 in a request implies a Ping interaction.
       return json({
         type: 1, // Type 1 in a response is a Pong interaction response type.
       });
-    } else if (type === 2) {
+    } else if (parsedBody.type === 2) {
       // Type 2 in a request is an ApplicationCommand interaction.
       // It implies that a user has issued a command.
-      const command = commands.find((c) => c.name === data.name);
+      const command = commands.find((c) => c.name === parsedBody.data.name);
       if (command) {
         const commandClass = command.class;
-        const commandInstance = new commandClass(data);
+        const commandInstance = new commandClass(parsedBody.data);
         const response = await commandInstance.handler();
         return json(response);
       } else {
