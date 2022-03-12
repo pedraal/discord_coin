@@ -1,11 +1,30 @@
-import all from "https://deno.land/x/promise_fns/src/all.ts";
 import { AsciiAlign, AsciiTable } from "../deps.ts";
 import { AirtableApi } from "./airtable_api.ts";
 
 const airtableApi = new AirtableApi();
 
 const magic_eden_base_url =
-  "https://api-mainnet.magiceden.io/rpc/getCollectionEscrowStats/";
+  "https://api-mainnet.magiceden.io/rpc/getMultiCollectionEscrowStats/";
+
+// https://api-mainnet.magiceden.io/rpc/getNFTsByOwner/CG2t78yajCZjmY15D8oVzqPDEQ2eAMxP6nxtzoknv5Bm
+
+type MagicEdenNft = {
+  symbol: string;
+  floorPrice: number;
+  listedCount: number;
+  volumeAll: number;
+  volume24hr: number;
+  avgPrice24hr: number;
+};
+
+type Nft = {
+  symbol: string;
+  floor: string;
+  listed: number;
+  vat: string;
+  v24h: string;
+  avg: string;
+};
 
 export class MagicEdenApi {
   nftSymbols: string[];
@@ -20,25 +39,25 @@ export class MagicEdenApi {
   }
 
   async fetchNfts(symbols: string[]) {
-    const responses = await all(
-      symbols.map((symbol) => fetch(magic_eden_base_url + symbol)),
+    const response = await fetch(
+      magic_eden_base_url + symbols.join(",") + "?edge_cache=true",
     );
-    let nfts = await all(responses.map((res) => res.json()));
-    nfts = nfts.map((d) => {
+    const rawNfts: MagicEdenNft[] = await response.json();
+
+    const nfts: Nft[] = rawNfts.map((nft: MagicEdenNft) => {
       return {
-        symbol: d.results.symbol,
-        floor: this.formatedPrice(d.results.floorPrice),
-        listed: d.results.listedCount,
-        vat: this.formatedPrice(d.results.volumeAll),
-        v24h: this.formatedPrice(d.results.volume24hr),
-        avg: this.formatedPrice(d.results.avgPrice24hr),
+        symbol: nft.symbol,
+        floor: this.formatedPrice(nft.floorPrice),
+        listed: nft.listedCount,
+        vat: this.formatedPrice(nft.volumeAll),
+        v24h: this.formatedPrice(nft.volume24hr),
+        avg: this.formatedPrice(nft.avgPrice24hr),
       };
     });
 
-    nfts = nfts.sort(function (a, b) {
-      return b.floor - a.floor;
+    return nfts.sort(function (a: Nft, b: Nft) {
+      return parseFloat(b.floor) - parseFloat(a.floor);
     });
-    return nfts;
   }
 
   async discordTable() {
@@ -47,7 +66,7 @@ export class MagicEdenApi {
     const table = new AsciiTable("NFT");
     table.setHeading("Name", "◎");
 
-    nfts.forEach((nft) => {
+    nfts.forEach((nft: Nft) => {
       table.addRow(nft.symbol, nft.floor);
     });
 
@@ -56,8 +75,9 @@ export class MagicEdenApi {
     };
   }
 
-  async discordDetails(options: any) {
-    const symbol = options.find((o: any) => o.name === "name");
+  async discordDetails(options: Record<string, string>[]) {
+    const symbol = options.find((o) => o.name === "name");
+    if (!symbol) throw new Error("missing symbol");
     const nft = (await this.fetchNfts([symbol.value]))[0];
 
     const table = new AsciiTable(symbol.value);

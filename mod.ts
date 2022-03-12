@@ -1,11 +1,12 @@
 import { contentType, path, serve } from "./deps.ts";
 import { discordCommandsHandler } from "./services/discord_commands.ts";
-import { reportHandler } from "./services/report.ts";
+import api from "./services/api.ts";
 
 serve({
   "/discord": discordCommandsHandler,
   "/": handleStaticAsset,
-  "/api": reportHandler,
+  "/api/coin": api.coin,
+  "/api/nft": api.nft,
   "/:filename+": handleStaticAsset,
 });
 
