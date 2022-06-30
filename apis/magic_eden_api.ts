@@ -49,6 +49,7 @@ export class MagicEdenApi {
     const response = await fetch(
       magic_eden_base_url + symbols.join(",") + "?edge_cache=true",
     );
+    console.log(response);
     const rawNfts: MagicEdenNft[] = await response.json();
 
     const nfts: Nft[] = rawNfts.map((nft: MagicEdenNft) => {
