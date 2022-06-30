@@ -30,6 +30,13 @@ export class MagicEdenApi {
   nftSymbols: string[];
 
   static async init() {
+    try {
+      const nfts = await this.#fetchConfig();
+      console.log(nfts);
+      return new MagicEdenApi(nfts);
+    } catch (error) {
+      console.log(error);
+    }
     const nfts = await this.#fetchConfig();
     return new MagicEdenApi(nfts);
   }
