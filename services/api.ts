@@ -11,11 +11,15 @@ async function coin(_request: Request) {
 }
 
 async function nft(_request: Request) {
-  const meApi = await MagicEdenApi.init();
+  try {
+    const meApi = await MagicEdenApi.init();
 
-  const nfts = await meApi.fetchNfts(meApi.nftSymbols);
+    const nfts = await meApi.fetchNfts(meApi.nftSymbols);
 
-  return json({ nfts });
+    return json({ nfts });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export default {
